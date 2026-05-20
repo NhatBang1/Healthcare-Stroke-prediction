@@ -1,0 +1,69 @@
+{
+    "numeric_fill": {
+        "gender": 1.0,
+        "age": 45.0,
+        "hypertension": 0.0,
+        "heart_disease": 0.0,
+        "avg_glucose_level": 91.46,
+        "bmi": 28.0,
+        "avg_RestingBP": 131.5,
+        "heart_cholesterol": 217.4444444,
+        "avg_MaxHR": 141.0967742,
+        "avg_Oldpeak": 0.8145833330000001,
+        "heart_disease_rate": 0.5,
+        "avg_height": 168.0,
+        "avg_weight": 72.0,
+        "avg_ap_hi": 122.0,
+        "avg_ap_lo": 80.0,
+        "cardio_cholesterol": 1.0,
+        "cardio_gluc": 1.0,
+        "cardio_rate": 0.0,
+        "smoke_flag": 0.0,
+        "alco_flag": 0.0,
+        "stroke_target": 0.0
+    },
+    "categorical_fill": {
+        "ever_married": "Yes",
+        "work_type": "Private",
+        "Residence_type": "Rural",
+        "smoking_status": "never smoked"
+    },
+    "categorical_columns": [
+        "ever_married",
+        "work_type",
+        "Residence_type",
+        "smoking_status"
+    ],
+    "feature_columns": [
+        "age",
+        "hypertension",
+        "heart_disease",
+        "avg_glucose_level",
+        "bmi",
+        "avg_RestingBP",
+        "heart_cholesterol",
+        "avg_MaxHR",
+        "avg_Oldpeak",
+        "heart_disease_rate",
+        "Estimated_calories"
+    ],
+    "decision_threshold": 0.595,
+    "best_model_name": "LogisticRegression",
+    "best_feature_set": "clinical_only",
+    "metrics": {
+        "real": {
+            "accuracy": 0.8044328552803129,
+            "precision": 0.1744186046511628,
+            "recall": 0.7894736842105263,
+            "f1": 0.2857142857142857,
+            "auc_roc": 0.8575193126850047
+        },
+        "synthetic": {
+            "accuracy": 0.778,
+            "precision": 0.04779411764705882,
+            "recall": 0.14942528735632185,
+            "f1": 0.07242339832869081,
+            "auc_roc": 0.5042828904019329
+        }
+    }
+}

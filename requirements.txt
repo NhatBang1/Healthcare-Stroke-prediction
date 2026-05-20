@@ -1,0 +1,19 @@
+--extra-index-url https://download.pytorch.org/whl/cu121
+torch==2.2.0
+torchvision==0.17.0
+torchaudio==2.2.0
+
+pandas
+seaborn
+
+tensorflow
+matplotlib
+scikit-learn
+scikit-image
+xgboost
+shap
+imblearn
+onnx
+onnxmltools
+skl2onnx
+onnxruntime
