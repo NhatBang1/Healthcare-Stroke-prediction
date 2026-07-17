@@ -43,3 +43,5 @@ env/
 *.o
 *.obj
 *.out
+
+.Report/
