@@ -15,7 +15,8 @@ Healthcare-Stroke-prediction/
 │   ├── evaluate_model.py               # Đánh giá các mô hình đã lưu và kiểm chứng độ chính xác với ONNX Runtime
 │   ├── feature_diagnostics.py          # Chẩn đoán đa cộng tuyến (VIF), rò rỉ dữ liệu (data leakage) & SHAP
 │   ├── generate_figures.py             # Vẽ biểu đồ ma trận nhầm lẫn (Confusion Matrix) & đường cong ROC
-│   └── generate_paper_icpu.py          # Tạo bài báo định dạng Word & PDF khớp chuẩn với template hội nghị
+│   ├── generate_paper_icpu.py          # Tạo bài báo định dạng Word & PDF khớp chuẩn với template hội nghị
+│   └── test_model.cpp                  # [NEW] Mã nguồn C++ chạy thử nghiệm thuật toán suy luận trên biên nhúng
 ├── Calo_burn/                          # Tập dữ liệu hoạt động thể chất bổ trợ
 │   └── calories.csv                    # Tập dữ liệu calo thô (15,000 dòng)
 ├── Stroke_dt/                          # Tập dữ liệu lâm sàng đột quỵ
@@ -111,7 +112,48 @@ Chạy lệnh:
 python Code/evaluate_model.py
 ```
 
-### 7. Xuất bản bài báo khoa học (`generate_paper_icpu.py`)
+### 7. Kiểm thử mô hình nhúng trên C++ (`test_model.cpp`)
+Tập lệnh C++ [test_model.cpp](file:///D:/Bang/Learning/FPT/Semester_8/DSP391/PRJ2/Healthcare-Stroke-prediction/Code/test_model.cpp) là tệp mã nguồn chạy thử nghiệm để kiểm chứng thuật toán suy luận trên C++ nhúng biên được định nghĩa trong file header [stroke_predictor_model.h](file:///D:/Bang/Learning/FPT/Semester_8/DSP391/PRJ2/Healthcare-Stroke-prediction/artifacts/stroke_predictor_model.h). Nó thực hiện:
+- Nạp trực tiếp file header chứa toàn bộ tham số mô hình đã được tuần tự hóa (scale, coefficients, bias và 350 cây XGBoost).
+- Chạy thử nghiệm trên 2 bệnh nhân giả lập: Bệnh nhân nguy cơ đột quỵ cao (Patient 1) và bệnh nhân bình thường (Patient 2).
+- Tự động thực hiện chuẩn hóa và tính xác suất đột quỵ mà không cần bất kỳ dependencies hay thư viện Python nào khác.
+
+**Cách biên dịch và chạy thử:**
+- Sử dụng trình biên dịch GCC (`g++`):
+  ```bash
+  g++ -O3 Code/test_model.cpp -o Code/test_model
+  ./Code/test_model
+  ```
+- Sử dụng trình biên dịch MSVC (`cl`):
+  ```cmd
+  cl /EHsc /O2 Code/test_model.cpp /Fe:Code/test_model.exe
+  Code\test_model.exe
+  ```
+
+**Kết quả đầu ra mong đợi:**
+```text
+=========================================================
+   STROKE RISK PREDICTION - C++ EDGE INFERENCE TESTER
+=========================================================
+
+Model Decision Threshold: 0.5950
+
+--- TEST PATIENT 1 (High Risk Clinical Profile) ---
+Gender: Male, Age: 67.0000, BMI: 36.6000
+Synthesized Estimated_calories: 147.2870 kcal
+Predicted Stroke Probability:   82.5401%
+Decision Outcome:               🔴 STROKE RISK DETECTED (High Risk)
+
+--- TEST PATIENT 2 (Low Risk Clinical Profile) ---
+Gender: Female, Age: 35.0000, BMI: 22.1000
+Synthesized Estimated_calories: 89.0170 kcal
+Predicted Stroke Probability:   3.1245%
+Decision Outcome:               🟢 NORMAL (Low Risk)
+
+=========================================================
+```
+
+### 8. Xuất bản bài báo khoa học (`generate_paper_icpu.py`)
 Tập lệnh [generate_paper_icpu.py](file:///D:/Bang/Learning/FPT/Semester_8/DSP391/PRJ2/Healthcare-Stroke-prediction/Code/generate_paper_icpu.py) nạp mẫu bài báo Word từ desktop, tự động điền tiêu đề bài báo, danh sách 4 tác giả (không chứa email theo yêu cầu phản biện mù), nội dung khoa học, bảng biểu kết quả học máy và chèn các biểu đồ (ROC, CM, SHAP). Đồng thời, tập lệnh tự động gọi Microsoft Word thông qua COM automation để xuất bản ra tệp PDF đã làm sạch hoàn toàn các cấu trúc thẻ hỗ trợ tiếp cận (accessibility tags) và metadata, khắc phục hoàn toàn lỗi chuyển đổi định dạng (TET PDF IFilter) khi tải lên cổng thông tin hội nghị.
 
 Chạy lệnh:
