@@ -45,3 +45,6 @@ env/
 *.out
 
 Report/
+
+Documents/*
+!Documents/Paper_ICPU.docx
