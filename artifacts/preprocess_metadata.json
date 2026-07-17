@@ -1,69 +1,109 @@
 {
-    "numeric_fill": {
-        "gender": 1.0,
-        "age": 45.0,
-        "hypertension": 0.0,
-        "heart_disease": 0.0,
-        "avg_glucose_level": 91.46,
-        "bmi": 28.0,
-        "avg_RestingBP": 131.5,
-        "heart_cholesterol": 217.4444444,
-        "avg_MaxHR": 141.0967742,
-        "avg_Oldpeak": 0.8145833330000001,
-        "heart_disease_rate": 0.5,
-        "avg_height": 168.0,
-        "avg_weight": 72.0,
-        "avg_ap_hi": 122.0,
-        "avg_ap_lo": 80.0,
-        "cardio_cholesterol": 1.0,
-        "cardio_gluc": 1.0,
-        "cardio_rate": 0.0,
-        "smoke_flag": 0.0,
-        "alco_flag": 0.0,
-        "stroke_target": 0.0
-    },
-    "categorical_fill": {
-        "ever_married": "Yes",
-        "work_type": "Private",
-        "Residence_type": "Rural",
-        "smoking_status": "never smoked"
-    },
-    "categorical_columns": [
-        "ever_married",
-        "work_type",
-        "Residence_type",
-        "smoking_status"
-    ],
-    "feature_columns": [
-        "age",
-        "hypertension",
-        "heart_disease",
-        "avg_glucose_level",
-        "bmi",
-        "avg_RestingBP",
-        "heart_cholesterol",
-        "avg_MaxHR",
-        "avg_Oldpeak",
-        "heart_disease_rate",
-        "Estimated_calories"
-    ],
-    "decision_threshold": 0.595,
-    "best_model_name": "LogisticRegression",
-    "best_feature_set": "clinical_only",
-    "metrics": {
-        "real": {
-            "accuracy": 0.8044328552803129,
-            "precision": 0.1744186046511628,
-            "recall": 0.7894736842105263,
-            "f1": 0.2857142857142857,
-            "auc_roc": 0.8575193126850047
-        },
-        "synthetic": {
-            "accuracy": 0.778,
-            "precision": 0.04779411764705882,
-            "recall": 0.14942528735632185,
-            "f1": 0.07242339832869081,
-            "auc_roc": 0.5042828904019329
-        }
-    }
+  "numeric_fill": {
+    "gender": 0.0,
+    "age": 54.0,
+    "hypertension": 0.0,
+    "heart_disease": 0.0,
+    "avg_glucose_level": 93.96,
+    "bmi": 30.0,
+    "avg_RestingBP": 132.2424242,
+    "avg_MaxHR": 140.5714286,
+    "avg_Oldpeak": 0.883333333,
+    "heart_disease_rate": 0.555555556,
+    "cardio_cholesterol": 1.0,
+    "cardio_gluc": 1.0,
+    "cardio_rate": 0.0,
+    "smoke_flag": 0.0,
+    "alco_flag": 0.0,
+    "stroke_target": 0.0
+  },
+  "categorical_fill": {
+    "ever_married": "Yes",
+    "work_type": "Private",
+    "Residence_type": "Urban",
+    "smoking_status": "never smoked"
+  },
+  "categorical_columns": [
+    "ever_married",
+    "work_type",
+    "Residence_type",
+    "smoking_status"
+  ],
+  "excluded_columns": [
+    "avg_weight",
+    "avg_height",
+    "avg_ap_hi",
+    "avg_ap_lo",
+    "heart_cholesterol"
+  ],
+  "selected_features": [
+    "age",
+    "hypertension",
+    "heart_disease",
+    "avg_glucose_level",
+    "bmi",
+    "avg_RestingBP",
+    "avg_MaxHR",
+    "avg_Oldpeak",
+    "heart_disease_rate",
+    "cardio_cholesterol",
+    "cardio_gluc",
+    "cardio_rate",
+    "gender",
+    "smoke_flag",
+    "alco_flag",
+    "Estimated_calories",
+    "ever_married_Yes",
+    "work_type_Never_worked",
+    "work_type_Private",
+    "work_type_Self-employed",
+    "work_type_children",
+    "Residence_type_Urban",
+    "smoking_status_never smoked",
+    "smoking_status_smokes",
+    "smoking_status_unknown"
+  ],
+  "calories_feature_columns": [
+    "Gender",
+    "Age",
+    "BMI"
+  ],
+  "feature_columns": [
+    "age",
+    "hypertension",
+    "heart_disease",
+    "avg_glucose_level",
+    "bmi",
+    "avg_RestingBP",
+    "avg_MaxHR",
+    "avg_Oldpeak",
+    "heart_disease_rate",
+    "cardio_cholesterol",
+    "cardio_gluc",
+    "cardio_rate",
+    "gender",
+    "smoke_flag",
+    "alco_flag",
+    "Estimated_calories",
+    "ever_married_Yes",
+    "work_type_Never_worked",
+    "work_type_Private",
+    "work_type_Self-employed",
+    "work_type_children",
+    "Residence_type_Urban",
+    "smoking_status_never smoked",
+    "smoking_status_smokes",
+    "smoking_status_unknown"
+  ],
+  "decision_threshold_edge": 0.615,
+  "decision_threshold_clinical": 0.04,
+  "stroke_model_input": "float32 tensor with shape [batch, feature_count]",
+  "stroke_model_output": "class label and class probabilities",
+  "notes": [
+    "Leaky features (avg_weight, avg_height, avg_ap_hi, avg_ap_lo, heart_cholesterol) are excluded.",
+    "BMI values outside [10, 80] are treated as missing before median imputation.",
+    "Stroke rows are deduplicated by patient_id before train/validation/test split.",
+    "Stacking Classifier (Calibrated Sigmoid) with 25 standard features is used for clinical reporting.",
+    "XGBoost Classifier with 6 baseline features is deployed for C++ edge inference."
+  ]
 }
