@@ -1,5 +1,6 @@
-# Tích hợp Mô hình Học máy Đa nguồn Dự báo Nguy cơ Đột quỵ với Ước lượng Tiêu hao Năng lượng Nhân tạo
-## SIC Capstone Project - Nhóm 4 (Healthcare Analytics)
+# An Integrated Multi-Source Machine Learning Framework for Stroke Risk Prediction with Synthetic Energy Expenditure Estimation
+
+## SIC Capstone Project (Healthcare Analytics)
 
 Dự án này nghiên cứu xây dựng hệ thống học máy tích hợp đa nguồn dữ liệu nhằm dự báo nguy cơ đột quỵ sớm ở bệnh nhân, đồng thời tích hợp chỉ số hành vi ước lượng tiêu hao năng lượng nhân tạo (`Estimated_calories`) làm đặc trưng bổ trợ và chuyển đổi mô hình sang ngôn ngữ C++ phục vụ triển khai nhúng biên (edge computing) với độ trễ cực thấp.
 
@@ -49,13 +50,17 @@ Healthcare-Stroke-prediction/
 ## 🛠️ Hướng dẫn vận hành hệ thống (Usage Guide)
 
 ### 1. Cài đặt môi trường
+
 Đảm bảo bạn đã cài đặt các thư viện Python cần thiết được liệt kê trong `requirements.txt`:
+
 ```bash
 pip install -r requirements.txt
 ```
 
 ### 2. Huấn luyện Pipeline chính (`Model.py`)
+
 Tập lệnh [Model.py](file:///D:/Bang/Learning/FPT/Semester_8/DSP391/PRJ2/Healthcare-Stroke-prediction/Code/Model.py) thực hiện toàn bộ quy trình:
+
 - Tiền xử lý dữ liệu lâm sàng đột quỵ thô và loại bỏ trùng lặp ở cấp độ bệnh nhân (Patient-level deduplication).
 - Huấn luyện mô hình hồi quy XGBoost trên tập dữ liệu Calo phụ trợ để ước lượng calo cho bệnh nhân đột quỵ dựa trên tuổi, giới tính và BMI.
 - Huấn luyện mô hình XGBoost phân loại đột quỵ trên tập dữ liệu đã khử trùng lặp và làm giàu đặc trưng.
@@ -63,23 +68,29 @@ Tập lệnh [Model.py](file:///D:/Bang/Learning/FPT/Semester_8/DSP391/PRJ2/Heal
 - Xuất bản các mô hình đã huấn luyện sang định dạng `joblib`, `json`, `onnx` và chuyển đổi trực tiếp thuật toán suy luận sang file header C++ tuần tự hóa (`stroke_predictor_model.h`) lưu vào thư mục `artifacts/`.
 
 Chạy pipeline bằng lệnh:
+
 ```bash
 python Code/Model.py
 ```
 
 ### 3. Chẩn đoán đặc trưng & Rò rỉ dữ liệu (`feature_diagnostics.py`)
+
 Tập lệnh [feature_diagnostics.py](file:///D:/Bang/Learning/FPT/Semester_8/DSP391/PRJ2/Healthcare-Stroke-prediction/Code/feature_diagnostics.py) thực hiện:
+
 - Kiểm tra tính rò rỉ thông tin (data leakage) giữa tập train và test khi phân chia theo hàng (Row split) so với phân chia theo bệnh nhân (Patient split).
 - Tính toán hệ số đa cộng tuyến VIF (Variance Inflation Factor) cho các đặc trưng lâm sàng đột quỵ.
 - Chạy phân tích SHAP giải thích mô hình và chẩn đoán hướng tác động của đặc trưng.
 
 Chạy lệnh:
+
 ```bash
 python Code/feature_diagnostics.py
 ```
 
 ### 4. So sánh hiệu năng các thuật toán (`compare_models.py`)
+
 Tập lệnh [compare_models.py](file:///D:/Bang/Learning/FPT/Semester_8/DSP391/PRJ2/Healthcare-Stroke-prediction/Code/compare_models.py) chạy thử nghiệm huấn luyện và đánh giá chéo 6 mô hình phân loại:
+
 1. Logistic Regression (LR)
 2. Random Forest (RF)
 3. Extra Trees (ET)
@@ -90,35 +101,44 @@ Tập lệnh [compare_models.py](file:///D:/Bang/Learning/FPT/Semester_8/DSP391/
 Kết quả so sánh các số liệu y tế (Accuracy, Precision, Recall, F1-score, AUC-ROC, AP) sẽ được lưu vào file [model_comparison.csv](file:///D:/Bang/Learning/FPT/Semester_8/DSP391/PRJ2/Healthcare-Stroke-prediction/artifacts/model_comparison.csv).
 
 Chạy lệnh:
+
 ```bash
 python Code/compare_models.py
 ```
 
 ### 5. Vẽ biểu đồ trực quan hóa (`generate_figures.py`)
+
 Tập lệnh [generate_figures.py](file:///D:/Bang/Learning/FPT/Semester_8/DSP391/PRJ2/Healthcare-Stroke-prediction/Code/generate_figures.py) sinh ra các biểu đồ phục vụ cho báo cáo và bài báo khoa học:
+
 - Đường cong ROC so sánh 6 thuật toán (`roc_curves.png`).
 - Ma trận nhầm lẫn y tế tối ưu ngưỡng (`confusion_matrix.png`).
 
 Chạy lệnh:
+
 ```bash
 python Code/generate_figures.py
 ```
 
 ### 6. Đánh giá kiểm chứng suy luận (`evaluate_model.py`)
+
 Tập lệnh [evaluate_model.py](file:///D:/Bang/Learning/FPT/Semester_8/DSP391/PRJ2/Healthcare-Stroke-prediction/Code/evaluate_model.py) thực hiện tải mô hình từ thư mục `artifacts/` và suy luận trên tập kiểm thử để so sánh đầu ra của mô hình Python gốc so với mô hình ONNX Runtime nhằm đảm bảo tính toàn vẹn và sai số tương đương bằng 0.
 
 Chạy lệnh:
+
 ```bash
 python Code/evaluate_model.py
 ```
 
 ### 7. Kiểm thử mô hình nhúng trên C++ (`test_model.cpp`)
+
 Tập lệnh C++ [test_model.cpp](file:///D:/Bang/Learning/FPT/Semester_8/DSP391/PRJ2/Healthcare-Stroke-prediction/Code/test_model.cpp) là tệp mã nguồn chạy thử nghiệm để kiểm chứng thuật toán suy luận trên C++ nhúng biên được định nghĩa trong file header [stroke_predictor_model.h](file:///D:/Bang/Learning/FPT/Semester_8/DSP391/PRJ2/Healthcare-Stroke-prediction/artifacts/stroke_predictor_model.h). Nó thực hiện:
+
 - Nạp trực tiếp file header chứa toàn bộ tham số mô hình đã được tuần tự hóa (scale, coefficients, bias và 350 cây XGBoost).
 - Chạy thử nghiệm trên 2 bệnh nhân giả lập: Bệnh nhân nguy cơ đột quỵ cao (Patient 1) và bệnh nhân bình thường (Patient 2).
 - Tự động thực hiện chuẩn hóa và tính xác suất đột quỵ mà không cần bất kỳ dependencies hay thư viện Python nào khác.
 
 **Cách biên dịch và chạy thử:**
+
 - Sử dụng trình biên dịch GCC (`g++`):
   ```bash
   g++ -O3 Code/test_model.cpp -o Code/test_model
@@ -131,8 +151,9 @@ Tập lệnh C++ [test_model.cpp](file:///D:/Bang/Learning/FPT/Semester_8/DSP391
   ```
 
 **Kết quả đầu ra mong đợi:**
+
 ```text
-=========================================================
+S=========================================================
    STROKE RISK PREDICTION - C++ EDGE INFERENCE TESTER
 =========================================================
 
@@ -153,20 +174,10 @@ Decision Outcome:               🟢 NORMAL (Low Risk)
 =========================================================
 ```
 
-### 8. Xuất bản bài báo khoa học (`generate_paper_icpu.py`)
-Tập lệnh [generate_paper_icpu.py](file:///D:/Bang/Learning/FPT/Semester_8/DSP391/PRJ2/Healthcare-Stroke-prediction/Code/generate_paper_icpu.py) nạp mẫu bài báo Word từ desktop, tự động điền tiêu đề bài báo, danh sách 4 tác giả (không chứa email theo yêu cầu phản biện mù), nội dung khoa học, bảng biểu kết quả học máy và chèn các biểu đồ (ROC, CM, SHAP). Đồng thời, tập lệnh tự động gọi Microsoft Word thông qua COM automation để xuất bản ra tệp PDF đã làm sạch hoàn toàn các cấu trúc thẻ hỗ trợ tiếp cận (accessibility tags) và metadata, khắc phục hoàn toàn lỗi chuyển đổi định dạng (TET PDF IFilter) khi tải lên cổng thông tin hội nghị.
-
-Chạy lệnh:
-```bash
-python Code/generate_paper_icpu.py
-```
-
----
-
 ## 👥 Nhóm Thực Hiện & Vai trò (Team & Contributions)
 
-* **Giảng viên hướng dẫn:** Cao Văn Mai
-* **Đề tài Capstone:** SIC Capstone Project - Nhóm 4 (Healthcare Analytics)
+* **Giảng viên hướng dẫn:** Vũ Thành Vinh
+* **Đề tài Capstone:** An Integrated Multi-Source Machine Learning Framework for Stroke Risk Prediction with Synthetic Energy Expenditure Estimation.
 * **Thành viên nhóm:**
   1. **Nguyễn Nhật Bằng** - Trưởng nhóm / Lead Data Scientist: Phụ trách thiết lập hệ thống, phát triển mô hình Stacking, tối ưu hóa ngưỡng lâm sàng và tích hợp suy luận C++.
   2. **Vũ Thế Diện** - Thành viên / Data Engineer: Phụ trách tiền xử lý, làm sạch dữ liệu BMI nhiễu, huấn luyện mô hình hồi quy Calo để sinh đặc trưng nhân tạo.
