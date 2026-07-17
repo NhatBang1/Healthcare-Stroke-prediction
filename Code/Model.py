@@ -603,38 +603,38 @@ def train_pipeline(save_models=True, show_shap=True):
     df_cal = pd.read_csv(CALORIES_PATH)
     calories_model = build_calories_model(df_cal)
 
-    processed_train_path = ROOT_DIR / "Report" / "stroke_train_processed.csv"
-    processed_val_path = ROOT_DIR / "Report" / "stroke_val_processed.csv"
-    processed_test_path = ROOT_DIR / "Report" / "stroke_test_processed.csv"
+    print("\nPreprocessing raw datasets from scratch...")
+    df_str_raw = pd.read_csv(STROKE_PATH)
+    df_str = deduplicate_patients(df_str_raw)
+    save_avg_ap_hi_diagnostics(df_str)
+    save_red_flag_diagnostics(df_str)
+    train_df, valid_df, test_df = stratified_split(df_str)
 
-    if processed_train_path.exists() and processed_val_path.exists() and processed_test_path.exists():
-        print("\nLoading preprocessed datasets directly from Report/...")
-        train_df = pd.read_csv(processed_train_path)
-        valid_df = pd.read_csv(processed_val_path)
-        test_df = pd.read_csv(processed_test_path)
+    X_train_pro, X_train, y_train, artifacts = preprocess_stroke_data(train_df, calories_model)
+    X_valid_pro, X_valid, y_valid, _ = preprocess_stroke_data(valid_df, calories_model, artifacts=artifacts)
+    X_test_pro, X_test, y_test, _ = preprocess_stroke_data(test_df, calories_model, artifacts=artifacts)
 
-        y_train = train_df["stroke_target"]
-        X_train = train_df.drop(columns=["patient_id", "stroke_target"], errors="ignore")
+    # Reconstruct processed dataframes to save them
+    train_df_save = train_df[['patient_id']].copy()
+    train_df_save['stroke_target'] = y_train.values
+    train_df_save = pd.concat([train_df_save, X_train], axis=1)
 
-        y_valid = valid_df["stroke_target"]
-        X_valid = valid_df.drop(columns=["patient_id", "stroke_target"], errors="ignore")
+    val_df_save = valid_df[['patient_id']].copy()
+    val_df_save['stroke_target'] = y_valid.values
+    val_df_save = pd.concat([val_df_save, X_valid], axis=1)
 
-        y_test = test_df["stroke_target"]
-        X_test = test_df.drop(columns=["patient_id", "stroke_target"], errors="ignore")
+    test_df_save = test_df[['patient_id']].copy()
+    test_df_save['stroke_target'] = y_test.values
+    test_df_save = pd.concat([test_df_save, X_test], axis=1)
 
-        artifacts = build_preprocessing_artifacts(pd.read_csv(STROKE_PATH))
-        artifacts["feature_columns"] = X_train.columns.tolist()
-    else:
-        print("\nPreprocessing raw datasets...")
-        df_str_raw = pd.read_csv(STROKE_PATH)
-        df_str = deduplicate_patients(df_str_raw)
-        save_avg_ap_hi_diagnostics(df_str)
-        save_red_flag_diagnostics(df_str)
-        train_df, valid_df, test_df = stratified_split(df_str)
-
-        _, X_train, y_train, artifacts = preprocess_stroke_data(train_df, calories_model)
-        _, X_valid, y_valid, _ = preprocess_stroke_data(valid_df, calories_model, artifacts=artifacts)
-        _, X_test, y_test, _ = preprocess_stroke_data(test_df, calories_model, artifacts=artifacts)
+    # Save to Report/, SIC_report/, and Code/
+    for folder in ["Report", "SIC_report", "Code"]:
+        dest_dir = ROOT_DIR / folder
+        if dest_dir.exists():
+            train_df_save.to_csv(dest_dir / "stroke_train_processed.csv", index=False)
+            val_df_save.to_csv(dest_dir / "stroke_val_processed.csv", index=False)
+            test_df_save.to_csv(dest_dir / "stroke_test_processed.csv", index=False)
+            print(f"Saved preprocessed datasets to {folder}/")
 
     # 1. Train Stacking Classifier Clinical Model (25 features)
     print("\nTraining Clinical Stacking Classifier...")

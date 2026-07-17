@@ -82,9 +82,14 @@ class DocBuilder:
     def __init__(self):
         # 1. Load the template from Desktop
         template_path = r"C:\Users\NhatBang\Desktop\Template-Conference.docx"
+        fallback_path = r"D:\Bang\Learning\FPT\Semester_8\DSP391\PRJ2\Healthcare-Stroke-prediction\Documents\Paper_ICPU.docx"
         if not os.path.exists(template_path):
-            print(f"Error: Template file not found at {template_path}")
-            sys.exit(1)
+            if os.path.exists(fallback_path):
+                print(f"Template not found at {template_path}. Using fallback template at {fallback_path}.")
+                template_path = fallback_path
+            else:
+                print(f"Error: Template file not found at {template_path} and no fallback at {fallback_path}")
+                sys.exit(1)
             
         self.doc = Document(template_path)
         
@@ -356,7 +361,7 @@ def build_paper(output_name="Final_paper_IEEE.docx"):
         "expenditure as a surrogate behavioral biomarker, and compares six "
         "candidate classifiers under validation-set F1-optimized decision "
         "thresholds. Stacking Calibrated Sigmoid achieves a recall "
-        "of 92.11% and an AUC-ROC of 0.8622 on the held-out patient test set, minimizing missed diagnoses. "
+        "of 92.11% and an AUC-ROC of 0.8544 on the held-out patient test set, minimizing missed diagnoses. "
         "SHAP analysis confirms age and average glucose level as dominant "
         "predictors, while estimated calories provides an independent behavioral "
         "signal. The pipeline is transpiled into a zero-dependency C++ binary "
@@ -417,7 +422,7 @@ def build_paper(output_name="Final_paper_IEEE.docx"):
     )
     db.bullet(
         "A systematic comparison showing Stacking Calibrated Sigmoid "
-        "achieves a recall of 92.11% with an AUC-ROC of 0.8622."
+        "achieves a recall of 92.11% with an AUC-ROC of 0.8544."
     )
     db.bullet(
         "A zero-dependency C++ CLI transpilation of the pipeline enabling "
@@ -606,13 +611,13 @@ def build_paper(output_name="Final_paper_IEEE.docx"):
         ["Model", "Thresh.", "Acc.", "Prec.", "Recall", "F1", "AUC"],
         [2.3, 1.1, 1.0, 1.0, 1.0, 1.0, 1.0],
         [
-            ("Stacking (Sigmoid)", "0.040", "71.2%", "13.8%", "92.1%", "0.241", "0.862"),
-            ("XGBoost",            "0.400", "61.9%", "11.0%", "94.7%", "0.198", "0.868"),
-            ("Grad. Boost.",       "0.030", "66.4%", "11.8%", "89.5%", "0.209", "0.854"),
-            ("Extra Trees",        "0.420", "59.1%", "10.3%", "94.7%", "0.187", "0.852"),
-            ("Log. Reg.",          "0.040", "70.4%", "13.5%", "92.1%", "0.236", "0.855"),
-            ("Hist. GB",           "0.230", "61.9%", "10.6%", "89.5%", "0.189", "0.840"),
-            ("Rand. Forest",       "0.370", "65.7%", "11.9%", "92.1%", "0.210", "0.863"),
+            ("XGBoost",            "0.645", "84.2%", "19.3%", "68.4%", "0.301", "0.859"),
+            ("Grad. Boost.",       "0.095", "84.7%", "19.4%", "65.8%", "0.299", "0.860"),
+            ("Log. Reg.",          "0.670", "83.8%", "18.4%", "65.8%", "0.287", "0.850"),
+            ("Extra Trees",        "0.575", "80.7%", "16.9%", "73.7%", "0.275", "0.850"),
+            ("Rand. Forest",       "0.545", "78.1%", "15.4%", "76.3%", "0.257", "0.845"),
+            ("Hist. GB",           "0.625", "83.3%", "15.4%", "52.6%", "0.238", "0.840"),
+            ("Stacking (Sigmoid)", "0.030", "66.4%", "12.1%", "92.1%", "0.213", "0.854"),
         ],
         note=(
             "Thresh.=optimized decision threshold; Prec.=precision; "
@@ -812,7 +817,7 @@ def build_paper(output_name="Final_paper_IEEE.docx"):
     )
     db.body(
         "Among candidate classifiers, Stacking Calibrated Sigmoid achieves a recall of 92.11% "
-        "and an AUC-ROC of 0.8622 after threshold optimization. SHAP analysis "
+        "and an AUC-ROC of 0.8544 after threshold optimization. SHAP analysis "
         "confirms age and glucose as dominant predictors, with estimated "
         "calories contributing an independent behavioral signal."
     )

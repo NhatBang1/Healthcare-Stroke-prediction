@@ -1,15 +1,15 @@
 {
   "numeric_fill": {
-    "gender": 0.0,
-    "age": 54.0,
+    "gender": 1.0,
+    "age": 45.0,
     "hypertension": 0.0,
     "heart_disease": 0.0,
-    "avg_glucose_level": 93.96,
-    "bmi": 30.0,
-    "avg_RestingBP": 132.2424242,
-    "avg_MaxHR": 140.5714286,
-    "avg_Oldpeak": 0.883333333,
-    "heart_disease_rate": 0.555555556,
+    "avg_glucose_level": 91.46,
+    "bmi": 28.0,
+    "avg_RestingBP": 131.5,
+    "avg_MaxHR": 141.0967742,
+    "avg_Oldpeak": 0.8145833330000001,
+    "heart_disease_rate": 0.5,
     "cardio_cholesterol": 1.0,
     "cardio_gluc": 1.0,
     "cardio_rate": 0.0,
@@ -20,7 +20,7 @@
   "categorical_fill": {
     "ever_married": "Yes",
     "work_type": "Private",
-    "Residence_type": "Urban",
+    "Residence_type": "Rural",
     "smoking_status": "never smoked"
   },
   "categorical_columns": [
@@ -95,8 +95,8 @@
     "smoking_status_smokes",
     "smoking_status_unknown"
   ],
-  "decision_threshold_edge": 0.615,
-  "decision_threshold_clinical": 0.04,
+  "decision_threshold_edge": 0.605,
+  "decision_threshold_clinical": 0.03,
   "stroke_model_input": "float32 tensor with shape [batch, feature_count]",
   "stroke_model_output": "class label and class probabilities",
   "notes": [
