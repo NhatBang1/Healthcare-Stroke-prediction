@@ -82,13 +82,7 @@ Pipeline huấn luyện nằm trong `Origin_code/Code/Model.py`. Trước khi th
 
 ## Nhóm thực hiện
 
-Vai trò được đối chiếu theo báo cáo code-aligned trong `output/doc/`:
-
 1. **Nguyễn Nhật Bằng** - Lead Data Scientist: điều phối, Stacking, tối ưu ngưỡng, edge/ONNX/C++ và artifact.
 2. **Trần Đức Thịnh** - Data Engineer: hợp nhất bệnh nhân, làm sạch BMI, preprocessing, hồi quy calo và feature schema.
 3. **Phạm Văn Tuấn Ninh** - Data Analyst & Model Evaluator: EDA, baseline, metrics, trực quan hóa và review kết quả.
 4. **Vũ Thế Diện** - Backend & Safety Engineer: FastAPI, emergency routing, Redis session, auth, rate limit và deployment.
-
-## Bảo mật và an toàn
-
-Không commit `.env`, API keys hoặc thông tin đăng nhập PostgreSQL. Nếu xuất hiện méo miệng, yếu/tê một bên, nói khó, mất thăng bằng đột ngột hoặc đau đầu dữ dội đột ngột, hãy gọi cấp cứu và đến cơ sở y tế ngay.
