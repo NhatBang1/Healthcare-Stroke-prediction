@@ -1,187 +1,84 @@
-# An Integrated Multi-Source Machine Learning Framework for Stroke Risk Prediction with Synthetic Energy Expenditure Estimation
+# StrokeGuard AI
 
-## SIC Capstone Project (Healthcare Analytics)
+StrokeGuard AI là hệ thống sàng lọc nguy cơ đột quỵ kết hợp mô hình lâm sàng, ước tính `Estimated_calories` và trợ lý hội thoại an toàn. Hệ thống chỉ hỗ trợ sàng lọc và giáo dục sức khỏe; không thay thế chẩn đoán hoặc chỉ định của bác sĩ.
 
-Dự án này nghiên cứu xây dựng hệ thống học máy tích hợp đa nguồn dữ liệu nhằm dự báo nguy cơ đột quỵ sớm ở bệnh nhân, đồng thời tích hợp chỉ số hành vi ước lượng tiêu hao năng lượng nhân tạo (`Estimated_calories`) làm đặc trưng bổ trợ và chuyển đổi mô hình sang ngôn ngữ C++ phục vụ triển khai nhúng biên (edge computing) với độ trễ cực thấp.
+## Thành phần hiện tại
 
-Phiên bản hiện tại bao gồm ứng dụng web StrokeGuard AI trong `Web/`, với backend FastAPI/LangGraph, trích xuất hồ sơ bằng DeepSeek, tra cứu nguồn y khoa bằng Tavily, PostgreSQL cho lịch sử hội thoại và giao diện Vite/HTML. Mô hình lâm sàng và metadata triển khai được lưu trong `Origin_code/artifacts/`.
+- `Origin_code/`: mã nguồn huấn luyện, dữ liệu và artifact mô hình.
+- `Origin_code/artifacts/stroke_model_clinical.joblib`: mô hình lâm sàng được backend nạp để suy luận.
+- `Origin_code/artifacts/preprocess_metadata.json`: schema tiền xử lý và ngưỡng lâm sàng hiện hành.
+- `Web/be/`: backend FastAPI, LangGraph, DeepSeek extraction, Tavily search và PostgreSQL persistence.
+- `Web/fe/`: giao diện chatbot, lịch sử, tiến độ, xác thực và khu vực quản trị.
+- `output/doc/`: báo cáo, action plan và script thuyết trình đã cập nhật.
 
----
+## Luồng hoạt động
 
-## 📂 Cấu trúc thư mục (Directory Structure)
+1. Người dùng cung cấp tuổi, giới tính, huyết áp, bệnh tim, glucose và BMI.
+2. DeepSeek tool trích xuất các giá trị được nói rõ; backend kiểm tra khoảng hợp lệ và evidence trước khi merge profile.
+3. LangGraph chạy mô hình khi đủ sáu trường bắt buộc. Card hiển thị điểm mức độ trên thang 10, độ tin cậy, các feature và calo ước tính.
+4. Agent tổng hợp diễn giải kết quả. Khi có bệnh tim, hút thuốc hoặc rượu, hệ thống có thể truy vấn nguồn y khoa qua Tavily và đưa tóm tắt ngắn kèm liên kết.
+5. Câu hỏi kiến thức về yếu tố nguy cơ đi vào general chat, không tạo prediction card. Gửi lại một bộ chỉ số đầy đủ trong cùng session sẽ yêu cầu xác nhận trước khi tạo prediction mới.
+6. Lịch sử hội thoại, assistant card và prediction được lưu trong PostgreSQL; session tạm thời có thể dùng Redis theo cấu hình.
 
-```text
-Healthcare-Stroke-prediction/
-├── Code/                               # Mã nguồn Python chính của dự án
-│   ├── Model.py                        # Pipeline chính: huấn luyện mô hình Calo & Đột quỵ, lưu trữ mô hình và transpilation sang C++
-│   ├── compare_models.py               # Chạy và so sánh hiệu năng của 6 thuật toán phân loại
-│   ├── evaluate_model.py               # Đánh giá các mô hình đã lưu và kiểm chứng độ chính xác với ONNX Runtime
-│   ├── feature_diagnostics.py          # Chẩn đoán đa cộng tuyến (VIF), rò rỉ dữ liệu (data leakage) & SHAP
-│   ├── generate_figures.py             # Vẽ biểu đồ ma trận nhầm lẫn (Confusion Matrix) & đường cong ROC
-│   ├── generate_paper_icpu.py          # Tạo bài báo định dạng Word & PDF khớp chuẩn với template hội nghị
-│   └── test_model.cpp                  # [NEW] Mã nguồn C++ chạy thử nghiệm thuật toán suy luận trên biên nhúng
-├── Calo_burn/                          # Tập dữ liệu hoạt động thể chất bổ trợ
-│   └── calories.csv                    # Tập dữ liệu calo thô (15,000 dòng)
-├── Stroke_dt/                          # Tập dữ liệu lâm sàng đột quỵ
-│   ├── SSHP_Data Descriptipn.docx      # Mô tả chi tiết các thuộc tính dữ liệu lâm sàng
-│   └── Stroke_dt.csv                   # Tập dữ liệu đột quỵ thô gốc (143,960 dòng)
-├── Documents/                          # Các văn bản báo cáo & bài báo khoa học xuất bản
-│   ├── Paper_ICPU.docx                 # Bài báo khoa học chuẩn hội nghị định dạng Word
-│   └── Paper_ICPU.pdf                  # Bài báo khoa học xuất bản định dạng PDF (đã làm sạch cấu trúc thẻ)
-├── artifacts/                          # Trọng số mô hình, siêu dữ liệu và biểu đồ đầu ra
-│   ├── calories_model.joblib           # Trọng số mô hình hồi quy Calo (joblib)
-│   ├── stroke_model.joblib             # Trọng số mô hình phân loại đột quỵ (joblib)
-│   ├── stroke_predictor_model.h        # Mã nguồn header C++ chứa tham số mô hình nhúng
-│   ├── confusion_matrix.png            # Biểu đồ ma trận nhầm lẫn tối ưu ngưỡng
-│   ├── roc_curves.png                  # Đường cong ROC của 6 mô hình so sánh
-│   ├── model_comparison.csv            # Kết quả số liệu so sánh chi tiết các mô hình
-│   └── ...                             # Các đồ thị SHAP và metadata tiền xử lý
-├── SIC_report/                         # Các báo cáo tiến độ và báo cáo cuối kỳ (Jupyter Notebooks)
-│   ├── Final_Project_Report.ipynb      # Báo cáo dự án cuối kỳ (Final Capstone Report)
-│   ├── Report1_Introduction.ipynb      # Báo cáo Tiến độ 1 (Project Proposal)
-│   ├── Report2_EDA.ipynb               # Báo cáo Tiến độ 2 (EDA)
-│   ├── Report3_Modeling.ipynb          # Báo cáo Tiến độ 3 (Model Training & Evaluation)
-│   └── Report4.ipynb                   # Báo cáo Tiến độ 4 (Feature Diagnostics & SHAP)
-├── requirements.txt                    # Danh sách các thư viện Python phụ thuộc
-├── LICENSE                             # Bản quyền mã nguồn mở của dự án
-└── README.md                           # Tài liệu hướng dẫn sử dụng này
-```
-
----
-
-## 🛠️ Hướng dẫn vận hành hệ thống (Usage Guide)
-
-### 1. Cài đặt môi trường
-
-Đảm bảo bạn đã cài đặt các thư viện Python cần thiết được liệt kê trong `requirements.txt`:
+## Chạy backend
 
 ```bash
+cd Web/be
+python -m venv .venv
+. .venv/bin/activate
 pip install -r requirements.txt
+cp .env.example .env
+uvicorn app.main:app --reload
 ```
 
-### 2. Huấn luyện Pipeline chính (`Model.py`)
+Các endpoint cơ bản:
 
-Tập lệnh [Model.py](file:///D:/Bang/Learning/FPT/Semester_8/DSP391/PRJ2/Healthcare-Stroke-prediction/Code/Model.py) thực hiện toàn bộ quy trình:
+- `GET /health`
+- `GET /ready`
+- `POST /api/chat/message`
+- `POST /api/predict/stroke`
+- `GET /api/sessions/{session_id}/messages`
 
-- Tiền xử lý dữ liệu lâm sàng đột quỵ thô và loại bỏ trùng lặp ở cấp độ bệnh nhân (Patient-level deduplication).
-- Huấn luyện mô hình hồi quy XGBoost trên tập dữ liệu Calo phụ trợ để ước lượng calo cho bệnh nhân đột quỵ dựa trên tuổi, giới tính và BMI.
-- Huấn luyện mô hình XGBoost phân loại đột quỵ trên tập dữ liệu đã khử trùng lặp và làm giàu đặc trưng.
-- Thực hiện tối ưu hóa ngưỡng quyết định lâm sàng (clinical decision threshold) nhằm cực đại hóa chỉ số F1 và Recall (giảm thiểu chẩn đoán bỏ sót nguy cơ).
-- Xuất bản các mô hình đã huấn luyện sang định dạng `joblib`, `json`, `onnx` và chuyển đổi trực tiếp thuật toán suy luận sang file header C++ tuần tự hóa (`stroke_predictor_model.h`) lưu vào thư mục `artifacts/`.
+Không commit `.env`, DeepSeek key, Tavily key hoặc credentials PostgreSQL. Migration PostgreSQL nằm trong `Web/be/migrations/`.
 
-Chạy pipeline bằng lệnh:
+## Chạy frontend
 
 ```bash
-python Code/Model.py
+cd Web/fe
+npm install
+npm run dev
 ```
 
-### 3. Chẩn đoán đặc trưng & Rò rỉ dữ liệu (`feature_diagnostics.py`)
-
-Tập lệnh [feature_diagnostics.py](file:///D:/Bang/Learning/FPT/Semester_8/DSP391/PRJ2/Healthcare-Stroke-prediction/Code/feature_diagnostics.py) thực hiện:
-
-- Kiểm tra tính rò rỉ thông tin (data leakage) giữa tập train và test khi phân chia theo hàng (Row split) so với phân chia theo bệnh nhân (Patient split).
-- Tính toán hệ số đa cộng tuyến VIF (Variance Inflation Factor) cho các đặc trưng lâm sàng đột quỵ.
-- Chạy phân tích SHAP giải thích mô hình và chẩn đoán hướng tác động của đặc trưng.
-
-Chạy lệnh:
+Build production:
 
 ```bash
-python Code/feature_diagnostics.py
+npm run build
 ```
 
-### 4. So sánh hiệu năng các thuật toán (`compare_models.py`)
-
-Tập lệnh [compare_models.py](file:///D:/Bang/Learning/FPT/Semester_8/DSP391/PRJ2/Healthcare-Stroke-prediction/Code/compare_models.py) chạy thử nghiệm huấn luyện và đánh giá chéo 6 mô hình phân loại:
-
-1. Logistic Regression (LR)
-2. Random Forest (RF)
-3. Extra Trees (ET)
-4. Gradient Boosting (GB)
-5. Histogram Gradient Boosting (HGB)
-6. XGBoost Classifier (XGB)
-
-Kết quả so sánh các số liệu y tế (Accuracy, Precision, Recall, F1-score, AUC-ROC, AP) sẽ được lưu vào file [model_comparison.csv](file:///D:/Bang/Learning/FPT/Semester_8/DSP391/PRJ2/Healthcare-Stroke-prediction/artifacts/model_comparison.csv).
-
-Chạy lệnh:
+## Kiểm thử
 
 ```bash
-python Code/compare_models.py
+cd Web/be
+PYTHONPATH=. .venv/bin/pytest -q
+
+cd ../fe
+npm test
+npm run build
 ```
 
-### 5. Vẽ biểu đồ trực quan hóa (`generate_figures.py`)
+## Huấn luyện và artifact
 
-Tập lệnh [generate_figures.py](file:///D:/Bang/Learning/FPT/Semester_8/DSP391/PRJ2/Healthcare-Stroke-prediction/Code/generate_figures.py) sinh ra các biểu đồ phục vụ cho báo cáo và bài báo khoa học:
+Pipeline gốc nằm trong `Origin_code/Code/Model.py`. Các script so sánh mô hình, đánh giá, chẩn đoán feature và kiểm tra suy luận C++ nằm cùng thư mục. Artifact mới phải được kiểm tra cùng `preprocess_metadata.json` trước khi đưa vào backend.
 
-- Đường cong ROC so sánh 6 thuật toán (`roc_curves.png`).
-- Ma trận nhầm lẫn y tế tối ưu ngưỡng (`confusion_matrix.png`).
+## Nhóm thực hiện và vai trò
 
-Chạy lệnh:
+Vai trò dưới đây được đối chiếu theo `output/doc/SIC_AI_Capstone Project_Final Report_G4_Code-Aligned_33P_EN.docx`:
 
-```bash
-python Code/generate_figures.py
-```
+1. **Nguyễn Nhật Bằng** - Lead Data Scientist: điều phối, phát triển Stacking, tối ưu ngưỡng, tích hợp edge/ONNX/C++ và artifact.
+2. **Trần Đức Thịnh** - Data Engineer: hợp nhất bệnh nhân, làm sạch BMI, tiền xử lý, hồi quy calo và schema feature.
+3. **Phạm Văn Tuấn Ninh** - Data Analyst & Model Evaluator: trực quan hóa dữ liệu, EDA, baseline, metric, biểu đồ và review kết quả.
+4. **Vũ Thế Diện** - Backend & Safety Engineer: FastAPI, emergency routing, Redis session, auth, rate limit và kiểm tra deployment.
 
-### 6. Đánh giá kiểm chứng suy luận (`evaluate_model.py`)
+## Giới hạn an toàn
 
-Tập lệnh [evaluate_model.py](file:///D:/Bang/Learning/FPT/Semester_8/DSP391/PRJ2/Healthcare-Stroke-prediction/Code/evaluate_model.py) thực hiện tải mô hình từ thư mục `artifacts/` và suy luận trên tập kiểm thử để so sánh đầu ra của mô hình Python gốc so với mô hình ONNX Runtime nhằm đảm bảo tính toàn vẹn và sai số tương đương bằng 0.
-
-Chạy lệnh:
-
-```bash
-python Code/evaluate_model.py
-```
-
-### 7. Kiểm thử mô hình nhúng trên C++ (`test_model.cpp`)
-
-Tập lệnh C++ [test_model.cpp](file:///D:/Bang/Learning/FPT/Semester_8/DSP391/PRJ2/Healthcare-Stroke-prediction/Code/test_model.cpp) là tệp mã nguồn chạy thử nghiệm để kiểm chứng thuật toán suy luận trên C++ nhúng biên được định nghĩa trong file header [stroke_predictor_model.h](file:///D:/Bang/Learning/FPT/Semester_8/DSP391/PRJ2/Healthcare-Stroke-prediction/artifacts/stroke_predictor_model.h). Nó thực hiện:
-
-- Nạp trực tiếp file header chứa toàn bộ tham số mô hình đã được tuần tự hóa (scale, coefficients, bias và 350 cây XGBoost).
-- Chạy thử nghiệm trên 2 bệnh nhân giả lập: Bệnh nhân nguy cơ đột quỵ cao (Patient 1) và bệnh nhân bình thường (Patient 2).
-- Tự động thực hiện chuẩn hóa và tính xác suất đột quỵ mà không cần bất kỳ dependencies hay thư viện Python nào khác.
-
-**Cách biên dịch và chạy thử:**
-
-- Sử dụng trình biên dịch GCC (`g++`):
-  ```bash
-  g++ -O3 Code/test_model.cpp -o Code/test_model
-  ./Code/test_model
-  ```
-- Sử dụng trình biên dịch MSVC (`cl`):
-  ```cmd
-  cl /EHsc /O2 Code/test_model.cpp /Fe:Code/test_model.exe
-  Code\test_model.exe
-  ```
-
-**Kết quả đầu ra mong đợi:**
-
-```text
-S=========================================================
-   STROKE RISK PREDICTION - C++ EDGE INFERENCE TESTER
-=========================================================
-
-Model Decision Threshold: 0.5950
-
---- TEST PATIENT 1 (High Risk Clinical Profile) ---
-Gender: Male, Age: 67.0000, BMI: 36.6000
-Synthesized Estimated_calories: 147.2870 kcal
-Predicted Stroke Probability:   82.5401%
-Decision Outcome:               🔴 STROKE RISK DETECTED (High Risk)
-
---- TEST PATIENT 2 (Low Risk Clinical Profile) ---
-Gender: Female, Age: 35.0000, BMI: 22.1000
-Synthesized Estimated_calories: 89.0170 kcal
-Predicted Stroke Probability:   3.1245%
-Decision Outcome:               🟢 NORMAL (Low Risk)
-
-=========================================================
-```
-
-## 👥 Nhóm Thực Hiện & Vai trò (Team & Contributions)
-
-* **Giảng viên hướng dẫn:** Vũ Thành Vinh
-* **Đề tài Capstone:** An Integrated Multi-Source Machine Learning Framework for Stroke Risk Prediction with Synthetic Energy Expenditure Estimation.
-* **Thành viên nhóm:**
-  1. **Nguyễn Nhật Bằng** - Trưởng nhóm / Lead Data Scientist: Phụ trách thiết lập hệ thống, phát triển mô hình Stacking, tối ưu hóa ngưỡng lâm sàng và tích hợp suy luận C++.
-  2. **Vũ Thế Diện** - Thành viên / Data Engineer: Phụ trách tiền xử lý, làm sạch dữ liệu BMI nhiễu, huấn luyện mô hình hồi quy Calo để sinh đặc trưng nhân tạo.
-  3. **Phạm Tuấn Ninh** - Thành viên / Data Analyst: Phụ trách phân tích khám phá dữ liệu (EDA), phân tích đơn biến, đa biến, vẽ biểu đồ tương quan.
-  4. **Đức Thịnh** - Thành viên / Researcher: Phụ trách khảo sát các nghiên cứu liên quan (Related Works), phát hiện nhiễu y tế (red-flag features) và khảo sát dịch tễ đột quỵ.
+Kết quả là ước tính từ dữ liệu đầu vào và mô hình hiện hành. Khi có dấu hiệu đột quỵ cấp tính như méo miệng, yếu hoặc tê một bên, nói khó, mất thăng bằng đột ngột hay đau đầu dữ dội đột ngột, hãy gọi cấp cứu và đến cơ sở y tế ngay.
