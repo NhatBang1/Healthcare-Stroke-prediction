@@ -1,0 +1,21 @@
+[Unit]
+Description=StrokeGuard AI backend API
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/nhatbang/Samsung_NIC/Healthcare-Stroke-prediction/Web/be
+Environment=PYTHONUNBUFFERED=1
+EnvironmentFile=-/home/nhatbang/Samsung_NIC/Healthcare-Stroke-prediction/Web/be/.env
+ExecStart=/home/nhatbang/Samsung_NIC/Healthcare-Stroke-prediction/Web/be/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 9001
+ExecReload=/bin/kill -TERM $MAINPID
+Restart=always
+RestartSec=2
+KillMode=mixed
+TimeoutStopSec=20
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target

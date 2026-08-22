@@ -1,0 +1,7 @@
+tunnel: __TUNNEL_ID__
+credentials-file: /home/nhatbang/.cloudflared/__TUNNEL_ID__.json
+
+ingress:
+  - hostname: verbaa.pp.ua
+    service: http://127.0.0.1:9001
+  - service: http_status:404

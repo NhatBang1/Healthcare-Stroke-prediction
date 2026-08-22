@@ -1,0 +1,7 @@
+[Unit]
+Description=StrokeGuard AI full stack
+Wants=strokeguard-backend.service
+After=network-online.target
+
+[Install]
+WantedBy=default.target

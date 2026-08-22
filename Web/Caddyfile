@@ -1,0 +1,17 @@
+lilkremxxx.strokeg.pp.ua, strokeg.lilkremxxx.pp.ua {
+    encode zstd gzip
+
+    # Keep the incoming path intact because the FastAPI app already exposes
+    # its routes under /api/* and /docs*.
+    handle /api/* {
+        reverse_proxy backend:8000
+    }
+
+    handle /docs* {
+        reverse_proxy backend:8000
+    }
+
+    handle {
+        reverse_proxy frontend:80
+    }
+}
