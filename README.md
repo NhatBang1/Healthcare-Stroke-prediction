@@ -4,6 +4,8 @@
 
 Dự án này nghiên cứu xây dựng hệ thống học máy tích hợp đa nguồn dữ liệu nhằm dự báo nguy cơ đột quỵ sớm ở bệnh nhân, đồng thời tích hợp chỉ số hành vi ước lượng tiêu hao năng lượng nhân tạo (`Estimated_calories`) làm đặc trưng bổ trợ và chuyển đổi mô hình sang ngôn ngữ C++ phục vụ triển khai nhúng biên (edge computing) với độ trễ cực thấp.
 
+Phiên bản hiện tại bao gồm ứng dụng web StrokeGuard AI trong `Web/`, với backend FastAPI/LangGraph, trích xuất hồ sơ bằng DeepSeek, tra cứu nguồn y khoa bằng Tavily, PostgreSQL cho lịch sử hội thoại và giao diện Vite/HTML. Mô hình lâm sàng và metadata triển khai được lưu trong `Origin_code/artifacts/`.
+
 ---
 
 ## 📂 Cấu trúc thư mục (Directory Structure)
@@ -183,4 +185,3 @@ Decision Outcome:               🟢 NORMAL (Low Risk)
   2. **Vũ Thế Diện** - Thành viên / Data Engineer: Phụ trách tiền xử lý, làm sạch dữ liệu BMI nhiễu, huấn luyện mô hình hồi quy Calo để sinh đặc trưng nhân tạo.
   3. **Phạm Tuấn Ninh** - Thành viên / Data Analyst: Phụ trách phân tích khám phá dữ liệu (EDA), phân tích đơn biến, đa biến, vẽ biểu đồ tương quan.
   4. **Đức Thịnh** - Thành viên / Researcher: Phụ trách khảo sát các nghiên cứu liên quan (Related Works), phát hiện nhiễu y tế (red-flag features) và khảo sát dịch tễ đột quỵ.
-  5. **Nguyễn Văn Sơn** - Thành viên / Systems Engineer: Phụ trách kiểm thử suy luận, phân tích độ quan trọng đặc trưng (SHAP), kiểm chứng C++ và đánh giá ablation study.
