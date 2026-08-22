@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>StrokeGuard AI - Tiến độ</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Source+Serif+4:wght@400;600&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            background: "#ebfdf8",
+            surface: "#ebfdf8",
+            "surface-container": "#dff2ed",
+            "surface-container-low": "#e5f8f2",
+            "surface-container-high": "#daece7",
+            "surface-container-highest": "#d4e6e1",
+            "surface-container-lowest": "#ffffff",
+            primary: "#005c55",
+            "primary-container": "#0f766e",
+            secondary: "#216963",
+            "secondary-container": "#a8ece5",
+            "on-primary": "#ffffff",
+            "on-surface": "#0e1e1b",
+            "on-background": "#0e1e1b",
+            "on-surface-variant": "#3e4947",
+            "on-secondary-container": "#266d68",
+            outline: "#6e7977",
+            "outline-variant": "#bdc9c6",
+            error: "#ba1a1a",
+            "error-container": "#ffdad6"
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            "2xl": "1rem",
+            "3xl": "1.5rem",
+            full: "9999px"
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body { font-family: "Plus Jakarta Sans", sans-serif; }
+    .glass-panel { background: rgba(255, 255, 255, 0.72); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(15, 118, 110, 0.16); }
+    .bubble-shadow { box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06); }
+    .material-symbols-outlined { font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24; }
+    .fill-icon { font-variation-settings: "FILL" 1; }
+  </style>
+</head>
+<body class="min-h-screen overflow-x-hidden bg-background text-on-surface">
+  <div class="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_top_left,rgba(15,118,110,0.16),transparent_26%),radial-gradient(circle_at_bottom_right,rgba(33,105,99,0.12),transparent_24%)]"></div>
+
+  <header class="fixed inset-x-0 top-0 z-50 border-b border-outline-variant/30 bg-surface/80 backdrop-blur-xl shadow-sm">
+    <div class="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-4 sm:px-6">
+      <div class="flex items-center gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary-container text-on-primary shadow-sm">
+          <span class="material-symbols-outlined fill-icon">neurology</span>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold text-primary">StrokeGuard AI</h1>
+          <p class="text-xs text-on-surface-variant">Trang tiến độ theo dõi</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <a class="rounded-full border border-outline-variant/40 px-4 py-2 text-sm font-semibold text-primary transition hover:bg-surface-container-low" href="/">Về chat</a>
+        <a class="rounded-full border border-outline-variant/40 px-4 py-2 text-sm font-semibold text-primary transition hover:bg-surface-container-low" href="/settings">Cài đặt</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="relative z-10 mx-auto max-w-[1320px] px-4 pb-16 pt-24 sm:px-6">
+    <section class="grid gap-5 xl:grid-cols-[minmax(0,1.35fr)_minmax(340px,0.65fr)]">
+      <article class="glass-panel rounded-[26px] p-4 shadow-sm sm:p-5">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-on-surface-variant">Tiến độ</p>
+            <h2 class="mt-1 text-[28px] font-bold tracking-[-0.03em] text-on-background">Theo dõi nguy cơ đột quỵ</h2>
+            <p id="summary-note" class="mt-2 max-w-2xl text-sm leading-6 text-on-surface-variant">Đang tải dữ liệu phiên hiện tại.</p>
+          </div>
+          <span id="risk-label" class="rounded-full bg-secondary-container px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-on-secondary-container">Chưa có dữ liệu</span>
+        </div>
+
+        <div class="mt-4 grid gap-3 sm:grid-cols-3">
+          <div class="rounded-[22px] bg-surface-container-lowest p-4 shadow-sm">
+            <p class="text-xs uppercase tracking-[0.16em] text-on-surface-variant">Nguy cơ hiện tại</p>
+            <p id="risk-value" class="mt-2 text-3xl font-bold text-primary">--</p>
+          </div>
+          <div class="rounded-[22px] bg-surface-container-lowest p-4 shadow-sm">
+            <p class="text-xs uppercase tracking-[0.16em] text-on-surface-variant">Cập nhật gần nhất</p>
+            <p id="risk-updated" class="mt-2 text-sm font-semibold text-on-surface">Chưa có dữ liệu</p>
+          </div>
+          <div class="rounded-[22px] bg-surface-container-lowest p-4 shadow-sm">
+            <p class="text-xs uppercase tracking-[0.16em] text-on-surface-variant">Xu hướng</p>
+            <p id="risk-trend" class="mt-2 text-sm font-semibold text-primary">Chờ dữ liệu</p>
+          </div>
+        </div>
+
+        <div class="mt-4 rounded-[22px] bg-surface-container-lowest p-4 shadow-sm">
+          <div class="flex items-center justify-between gap-3">
+            <p class="text-sm font-semibold text-on-surface">Biểu đồ nguy cơ</p>
+            <span class="text-xs text-on-surface-variant">Nguồn từ chat</span>
+          </div>
+          <div class="mt-3 h-56 rounded-2xl bg-[linear-gradient(180deg,rgba(15,118,110,0.08),transparent)] p-3">
+            <svg class="h-full w-full" viewBox="0 0 320 160" preserveAspectRatio="none">
+              <path d="M0 128 H320" stroke="rgba(15,118,110,0.12)" stroke-dasharray="4 6"></path>
+              <path d="M0 96 H320" stroke="rgba(15,118,110,0.08)" stroke-dasharray="4 6"></path>
+              <path d="M0 64 H320" stroke="rgba(15,118,110,0.08)" stroke-dasharray="4 6"></path>
+              <polyline id="risk-chart" fill="none" stroke="#0f766e" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"></polyline>
+            </svg>
+          </div>
+        </div>
+
+        <div class="mt-4 grid gap-3 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)]">
+          <div class="rounded-[22px] bg-surface-container-lowest p-4 shadow-sm">
+            <p class="text-sm font-semibold text-on-surface">Smartwatch Integration</p>
+            <p class="mt-2 text-sm leading-6 text-on-surface-variant">Calo, nhịp tim, bước chân và dữ liệu hoạt động sẽ xuất hiện ở đây khi đồng hồ thông minh được kết nối.</p>
+          </div>
+          <div class="rounded-[22px] bg-surface-container-lowest p-4 shadow-sm">
+            <div class="flex items-center justify-between gap-3">
+              <p class="text-sm font-semibold text-on-surface">Feed theo dõi</p>
+              <span class="rounded-full bg-secondary-container px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-on-secondary-container">Live</span>
+            </div>
+            <div id="progress-feed" class="mt-3 space-y-2"></div>
+          </div>
+        </div>
+      </article>
+
+      <aside class="glass-panel rounded-[26px] p-4 shadow-sm sm:p-5">
+        <div class="flex items-center justify-between gap-3">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-on-surface-variant">Lịch sử phiên</p>
+            <h3 class="mt-1 text-lg font-bold text-on-surface">Timeline chat gần nhất</h3>
+          </div>
+          <span id="history-count" class="rounded-full bg-secondary-container px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-on-secondary-container">0</span>
+        </div>
+        <div id="history-list" class="relative mt-4 space-y-3"></div>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const sessionKey = "strokeguard_session_id";
+    const summaryNote = document.querySelector("#summary-note");
+    const riskLabel = document.querySelector("#risk-label");
+    const riskValue = document.querySelector("#risk-value");
+    const riskUpdated = document.querySelector("#risk-updated");
+    const riskTrend = document.querySelector("#risk-trend");
+    const riskChart = document.querySelector("#risk-chart");
+    const progressFeed = document.querySelector("#progress-feed");
+    const historyList = document.querySelector("#history-list");
+    const historyCount = document.querySelector("#history-count");
+
+    function getSessionId() {
+      let sessionId = localStorage.getItem(sessionKey);
+      if (!sessionId) {
+        sessionId = crypto.randomUUID();
+        localStorage.setItem(sessionKey, sessionId);
+      }
+      return sessionId;
+    }
+
+    function formatTime(date = new Date()) {
+      return new Intl.DateTimeFormat("vi-VN", {
+        hour: "2-digit",
+        minute: "2-digit",
+        day: "2-digit",
+        month: "2-digit"
+      }).format(date);
+    }
+
+    function buildChartPoints(points) {
+      if (!points.length) return "";
+      const width = 320;
+      const height = 160;
+      const step = points.length === 1 ? width / 2 : width / (points.length - 1);
+      return points
+        .map((value, index) => {
+          const x = points.length === 1 ? width / 2 : index * step;
+          const y = height - ((value / 10) * (height - 20)) - 10;
+          return `${x.toFixed(1)},${y.toFixed(1)}`;
+        })
+        .join(" ");
+    }
+
+    function renderFeed(entries) {
+      if (!entries.length) {
+        return `
+          <div class="rounded-2xl border border-dashed border-outline-variant/40 bg-surface-container-lowest p-4 text-sm text-on-surface-variant">
+            Chưa có gợi ý. Hãy nhập dữ liệu sức khỏe trong chat.
+          </div>
+        `;
+      }
+
+      return entries.slice(0, 4).map((entry) => `
+        <div class="rounded-2xl bg-surface-container-lowest p-4 shadow-sm">
+          <div class="flex items-center justify-between gap-3">
+            <p class="text-sm font-semibold text-on-surface">${entry.label}</p>
+            <span class="text-xs text-on-surface-variant">${entry.time || "Vừa xong"}</span>
+          </div>
+          <p class="mt-1 text-sm leading-6 text-on-surface-variant">${entry.note}</p>
+        </div>
+      `).join("");
+    }
+
+    function renderHistory(messages) {
+      historyCount.textContent = String(messages.length);
+      if (!messages.length) {
+        historyList.innerHTML = `
+          <div class="rounded-2xl border border-dashed border-outline-variant/40 bg-surface-container-lowest p-4 text-sm text-on-surface-variant">
+            Chưa có lịch sử cho phiên này.
+          </div>
+        `;
+        return;
+      }
+
+      historyList.innerHTML = `
+        <div class="absolute left-4 top-0 bottom-0 w-px bg-outline-variant/30"></div>
+      ` + messages.slice(-12).map((message) => {
+        const isUser = message.role === "user";
+        const timeLabel = message.time || "Vừa xong";
+        return `
+          <div class="relative pl-10">
+            <div class="absolute left-[10px] top-5 flex h-4 w-4 items-center justify-center rounded-full border-4 ${isUser ? "border-primary-container bg-primary" : "border-surface-container-lowest bg-primary-container"} shadow-sm">
+              <span class="sr-only">${isUser ? "User" : "AI"}</span>
+            </div>
+            <div class="rounded-[22px] ${isUser ? "bg-primary-container text-on-primary" : "bg-surface-container-lowest text-on-surface"} p-4 shadow-sm">
+              <div class="flex items-center justify-between gap-3">
+                <p class="text-xs font-bold uppercase tracking-[0.2em] ${isUser ? "text-on-primary/80" : "text-primary"}">${isUser ? "Người dùng" : "StrokeGuard AI"}</p>
+                <span class="rounded-full ${isUser ? "bg-on-primary/10 text-on-primary/80" : "bg-surface-container-low text-on-surface-variant"} px-2 py-1 text-[11px] font-semibold">${timeLabel}</span>
+              </div>
+              <p class="mt-2 text-sm leading-6 ${isUser ? "text-on-primary" : "text-on-surface-variant"}">${message.content}</p>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    async function loadOverview() {
+      const sessionId = getSessionId();
+      const response = await fetch(`/api/sessions/${encodeURIComponent(sessionId)}/overview`, {
+        credentials: "include"
+      });
+      if (!response.ok) {
+        summaryNote.textContent = "Không tải được dữ liệu tiến độ.";
+        progressFeed.innerHTML = renderFeed([]);
+        renderHistory([]);
+        return;
+      }
+
+      const overview = await response.json();
+      const progress = overview?.progress || {
+        current_risk: { label: "Chưa có dữ liệu", score: null, trend: "Chờ dữ liệu", updated_at: null },
+        chart_points: [],
+        entries: []
+      };
+      const history = overview?.history?.recent_messages || [];
+      const latestNote = progress.entries?.[0]?.note || "Chưa có dữ liệu tiến độ. Nhập chỉ số sức khỏe trong chat để bắt đầu theo dõi.";
+
+      summaryNote.textContent = latestNote;
+      riskLabel.textContent = progress.current_risk?.label || "Chưa có dữ liệu";
+      riskValue.textContent = progress.current_risk?.score == null ? "--" : `${Number(progress.current_risk.score).toFixed(1)} / 10`;
+      riskUpdated.textContent = progress.current_risk?.updated_at || "Chưa có dữ liệu";
+      riskTrend.textContent = progress.current_risk?.trend || "Chờ dữ liệu";
+      riskChart.setAttribute("points", buildChartPoints(progress.chart_points || []));
+      progressFeed.innerHTML = renderFeed(progress.entries || []);
+      renderHistory(history);
+    }
+
+    loadOverview();
+  </script>
+</body>
+</html>

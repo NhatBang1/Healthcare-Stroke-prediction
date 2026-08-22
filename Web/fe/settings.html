@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>StrokeGuard AI - Cài đặt</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: "Plus Jakarta Sans", sans-serif; }
+    .glass-panel { background: rgba(255, 255, 255, 0.72); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(15, 118, 110, 0.16); }
+    .material-symbols-outlined { font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24; }
+    .fill-icon { font-variation-settings: "FILL" 1; }
+  </style>
+</head>
+<body class="min-h-screen bg-[#ebfdf8] text-[#0e1e1b]">
+  <main class="relative mx-auto flex min-h-screen max-w-4xl flex-col px-4 py-6 sm:px-6 sm:py-8">
+    <header class="glass-panel flex items-center justify-between rounded-3xl px-4 py-3 shadow-sm sm:px-6">
+      <div class="flex items-center gap-3">
+        <div class="flex h-11 w-11 items-center justify-center rounded-full bg-[#0f766e] text-white">
+          <span class="material-symbols-outlined fill-icon">neurology</span>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold text-[#005c55]">StrokeGuard AI</h1>
+          <p class="text-sm text-[#3e4947]">Cài đặt tài khoản</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <a class="rounded-full border border-[rgba(15,118,110,0.2)] px-4 py-2 text-sm font-semibold text-[#005c55] transition hover:bg-white/70" href="/">Về chat</a>
+        <button id="logout-button" class="hidden rounded-full bg-[#005c55] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#115e59]" type="button">Đăng xuất</button>
+      </div>
+    </header>
+
+    <section class="mt-6 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+      <article class="glass-panel rounded-[28px] p-6 shadow-sm sm:p-8">
+        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-[#3e4947]">Tài khoản</p>
+        <h2 class="mt-3 text-3xl font-bold tracking-[-0.03em] text-[#0e1e1b]">Quản lý hồ sơ người dùng</h2>
+        <p class="mt-3 max-w-2xl text-base leading-7 text-[#3e4947]">
+          Trang này dùng để xem nhanh thông tin đăng nhập hiện tại và thao tác đăng xuất. Avatar ở header của trang chat sẽ dẫn tới đây.
+        </p>
+
+        <div class="mt-6 grid gap-4 sm:grid-cols-2">
+          <div class="rounded-2xl bg-white p-5 shadow-sm">
+            <p class="text-sm text-[#3e4947]">Tên hiển thị</p>
+            <p id="user-name" class="mt-2 text-lg font-bold text-[#0e1e1b]">Khách dùng</p>
+          </div>
+          <div class="rounded-2xl bg-white p-5 shadow-sm">
+            <p class="text-sm text-[#3e4947]">Email</p>
+            <p id="user-email" class="mt-2 text-lg font-bold text-[#0e1e1b]">Chưa đăng nhập</p>
+          </div>
+        </div>
+
+        <div class="mt-6 rounded-2xl bg-white p-5 shadow-sm">
+          <p class="text-sm font-semibold text-[#005c55]">Quyền truy cập</p>
+          <p id="user-role" class="mt-2 text-sm leading-6 text-[#3e4947]">Bạn chưa đăng nhập.</p>
+        </div>
+      </article>
+
+      <aside class="glass-panel rounded-[28px] p-6 shadow-sm sm:p-8">
+        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-[#3e4947]">Trạng thái</p>
+        <div class="mt-4 rounded-2xl bg-white p-5 shadow-sm">
+          <p class="text-sm text-[#3e4947]">Phiên hiện tại</p>
+          <p id="session-state" class="mt-2 text-xl font-bold text-[#0e1e1b]">Đang kiểm tra...</p>
+          <p id="session-detail" class="mt-2 text-sm leading-6 text-[#3e4947]">Đang tải trạng thái tài khoản từ backend.</p>
+        </div>
+
+        <a class="mt-4 inline-flex w-full items-center justify-center rounded-2xl bg-[#0f766e] px-5 py-3.5 text-sm font-bold text-white shadow-sm transition hover:bg-[#005c55]" href="/">Quay lại chat</a>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const userName = document.querySelector("#user-name");
+    const userEmail = document.querySelector("#user-email");
+    const userRole = document.querySelector("#user-role");
+    const sessionState = document.querySelector("#session-state");
+    const sessionDetail = document.querySelector("#session-detail");
+    const logoutButton = document.querySelector("#logout-button");
+
+    async function loadProfile() {
+      try {
+        const response = await fetch("/api/session/me", { credentials: "include" });
+        const payload = await response.json();
+        const account = payload?.authenticated ? payload.user : null;
+        if (account) {
+          userName.textContent = account.full_name || "Người dùng";
+          userEmail.textContent = account.email || "";
+          userRole.textContent = account.is_admin ? "Tài khoản có quyền quản trị." : "Tài khoản người dùng tiêu chuẩn.";
+          sessionState.textContent = "Đã đăng nhập";
+          sessionDetail.textContent = "Bạn đang đăng nhập bằng tài khoản hiện tại.";
+          logoutButton.classList.remove("hidden");
+        } else {
+          sessionState.textContent = "Chưa đăng nhập";
+          sessionDetail.textContent = "Hãy đăng nhập để lưu phiên chat và tiến độ.";
+          logoutButton.classList.add("hidden");
+        }
+      } catch {
+        sessionState.textContent = "Không tải được trạng thái";
+        sessionDetail.textContent = "Backend chưa phản hồi hoặc cookie phiên không hợp lệ.";
+      }
+    }
+
+    async function logout() {
+      try {
+        await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
+      } finally {
+        window.location.href = "/auth.html";
+      }
+    }
+
+    if (logoutButton) logoutButton.addEventListener("click", logout);
+    loadProfile();
+  </script>
+</body>
+</html>

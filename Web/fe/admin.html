@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>StrokeGuard AI - Admin</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: "Plus Jakarta Sans", sans-serif; }
+    .glass-panel { background: rgba(255, 255, 255, 0.72); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(15, 118, 110, 0.16); }
+    .material-symbols-outlined { font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24; }
+    .fill-icon { font-variation-settings: "FILL" 1; }
+  </style>
+</head>
+<body class="min-h-screen bg-[#ebfdf8] text-[#0e1e1b]">
+  <main class="relative mx-auto flex min-h-screen max-w-6xl flex-col px-4 py-6 sm:px-6 sm:py-8">
+    <header class="glass-panel flex items-center justify-between rounded-3xl px-4 py-3 shadow-sm sm:px-6">
+      <div class="flex items-center gap-3">
+        <div class="flex h-11 w-11 items-center justify-center rounded-full bg-[#0f766e] text-white">
+          <span class="material-symbols-outlined fill-icon">neurology</span>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold text-[#005c55]">StrokeGuard AI</h1>
+          <p class="text-sm text-[#3e4947]">Admin portal</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <a class="rounded-full border border-[rgba(15,118,110,0.2)] px-4 py-2 text-sm font-semibold text-[#005c55] transition hover:bg-white/70" href="/">User portal</a>
+        <button id="admin-logout" class="hidden rounded-full bg-[#005c55] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#115e59]" type="button">Đăng xuất</button>
+      </div>
+    </header>
+
+    <section class="mt-6 grid gap-6 lg:grid-cols-[1fr_420px]">
+      <article class="glass-panel rounded-[28px] p-6 shadow-sm sm:p-8">
+        <div id="login-panel">
+          <p class="text-xs font-semibold uppercase tracking-[0.2em] text-[#3e4947]">Cổng riêng</p>
+          <h2 class="mt-3 text-3xl font-bold tracking-[-0.03em] text-[#0e1e1b]">Đăng nhập admin bằng `admin / admin`</h2>
+          <p class="mt-3 max-w-2xl text-base leading-7 text-[#3e4947]">
+            Đây là lối vào tách biệt cho quản trị tài liệu. Sau khi đăng nhập, bạn sẽ thấy danh sách tài liệu nghiên cứu và trạng thái quản trị.
+          </p>
+
+          <form id="admin-login-form" class="mt-6 space-y-4">
+            <div>
+              <label class="text-sm font-semibold text-[#0e1e1b]" for="username">Username</label>
+              <input id="username" class="mt-2 w-full rounded-2xl border border-[rgba(15,118,110,0.2)] bg-white px-4 py-3 text-sm outline-none focus:border-[#005c55]" value="admin" autocomplete="username" />
+            </div>
+            <div>
+              <label class="text-sm font-semibold text-[#0e1e1b]" for="password">Password</label>
+              <input id="password" type="password" class="mt-2 w-full rounded-2xl border border-[rgba(15,118,110,0.2)] bg-white px-4 py-3 text-sm outline-none focus:border-[#005c55]" value="admin" autocomplete="current-password" />
+            </div>
+            <button class="w-full rounded-2xl bg-[#0f766e] px-5 py-3.5 text-sm font-bold text-white shadow-sm transition hover:bg-[#005c55]" type="submit">Đăng nhập admin</button>
+          </form>
+          <div id="admin-message" class="mt-4 hidden rounded-2xl border border-[rgba(15,118,110,0.15)] bg-white px-4 py-3 text-sm text-[#3e4947]"></div>
+        </div>
+
+        <div id="dashboard-panel" class="hidden">
+          <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.2em] text-[#3e4947]">Dashboard</p>
+              <h2 class="mt-3 text-3xl font-bold tracking-[-0.03em] text-[#0e1e1b]">Tài liệu nghiên cứu về đột quỵ</h2>
+            </div>
+            <span id="admin-badge" class="inline-flex rounded-full bg-[#dff2ed] px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-[#266d68]">Admin</span>
+          </div>
+
+          <div id="documents" class="mt-6 space-y-3"></div>
+        </div>
+      </article>
+
+      <aside class="glass-panel rounded-[28px] p-6 shadow-sm sm:p-8">
+        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-[#3e4947]">Trạng thái</p>
+        <div class="mt-4 space-y-4">
+          <div class="rounded-2xl bg-white p-5 shadow-sm">
+            <p class="text-sm text-[#3e4947]">Phiên admin</p>
+            <p id="admin-state" class="mt-2 text-xl font-bold text-[#0e1e1b]">Chưa đăng nhập</p>
+            <p id="admin-state-detail" class="mt-2 text-sm leading-6 text-[#3e4947]">Điền admin/admin để vào portal.</p>
+          </div>
+          <a class="inline-flex w-full items-center justify-center rounded-2xl border border-[rgba(15,118,110,0.2)] bg-white px-5 py-3.5 text-sm font-semibold text-[#005c55] transition hover:bg-[#f2faf8]" href="/admin-documents.html">Mở trang documents cũ</a>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const loginPanel = document.querySelector("#login-panel");
+    const dashboardPanel = document.querySelector("#dashboard-panel");
+    const loginForm = document.querySelector("#admin-login-form");
+    const adminMessage = document.querySelector("#admin-message");
+    const adminState = document.querySelector("#admin-state");
+    const adminStateDetail = document.querySelector("#admin-state-detail");
+    const adminLogout = document.querySelector("#admin-logout");
+    const documents = document.querySelector("#documents");
+
+    function showMessage(text, error = false) {
+      adminMessage.textContent = text;
+      adminMessage.className = `mt-4 rounded-2xl border px-4 py-3 text-sm ${error ? "border-red-200 bg-red-50 text-red-700" : "border-[rgba(15,118,110,0.15)] bg-white text-[#3e4947]"}`;
+      adminMessage.classList.remove("hidden");
+    }
+
+    function renderDocuments(items) {
+      documents.innerHTML = items.length
+        ? items.map((item) => `
+            <div class="rounded-2xl bg-white p-5 shadow-sm">
+              <div class="flex items-start justify-between gap-3">
+                <div>
+                  <p class="text-sm font-semibold text-[#005c55]">${item.title}</p>
+                  <p class="mt-1 text-sm text-[#3e4947]">${item.source_type} • ${item.status}</p>
+                </div>
+                <span class="rounded-full bg-[#dff2ed] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-[#266d68]">${item.id}</span>
+              </div>
+              <p class="mt-3 break-all text-xs text-[#6e7977]">${item.storage_path}</p>
+            </div>
+          `).join("")
+        : `<div class="rounded-2xl border border-dashed border-[rgba(15,118,110,0.2)] bg-white p-5 text-sm text-[#3e4947]">Chưa có tài liệu.</div>`;
+    }
+
+    async function loadAdmin() {
+      try {
+        const response = await fetch("/api/admin/me", { credentials: "include" });
+        if (!response.ok) {
+          throw new Error("not authenticated");
+        }
+        const user = await response.json();
+        loginPanel.classList.add("hidden");
+        dashboardPanel.classList.remove("hidden");
+        adminLogout.classList.remove("hidden");
+        adminState.textContent = `Đã đăng nhập: ${user.username}`;
+        adminStateDetail.textContent = "Portal admin đang hoạt động.";
+        const docsResponse = await fetch("/api/admin/documents", { credentials: "include" });
+        const docsPayload = await docsResponse.json();
+        renderDocuments(docsPayload.documents || []);
+      } catch {
+        loginPanel.classList.remove("hidden");
+        dashboardPanel.classList.add("hidden");
+        adminLogout.classList.add("hidden");
+        adminState.textContent = "Chưa đăng nhập";
+        adminStateDetail.textContent = "Điền admin/admin để vào portal.";
+      }
+    }
+
+    loginForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      try {
+        const response = await fetch("/api/admin/login", {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: document.querySelector("#username").value,
+            password: document.querySelector("#password").value
+          })
+        });
+        const payload = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          throw new Error(payload.detail || "Admin login failed");
+        }
+        showMessage("Đăng nhập admin thành công.");
+        await loadAdmin();
+      } catch (error) {
+        showMessage(error.message || "Không thể đăng nhập admin.", true);
+      }
+    });
+
+    adminLogout.addEventListener("click", async () => {
+      await fetch("/api/admin/logout", { method: "POST", credentials: "include" });
+      window.location.reload();
+    });
+
+    loadAdmin();
+  </script>
+</body>
+</html>

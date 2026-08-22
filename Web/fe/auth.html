@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>StrokeGuard AI - Đăng nhập / Đăng ký</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Source+Serif+4:wght@400;600&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            background: "#ebfdf8",
+            surface: "#ebfdf8",
+            "surface-container": "#dff2ed",
+            "surface-container-low": "#e5f8f2",
+            "surface-container-high": "#daece7",
+            "surface-container-highest": "#d4e6e1",
+            "surface-container-lowest": "#ffffff",
+            primary: "#005c55",
+            "primary-container": "#0f766e",
+            secondary: "#216963",
+            "secondary-container": "#a8ece5",
+            "on-primary": "#ffffff",
+            "on-surface": "#0e1e1b",
+            "on-background": "#0e1e1b",
+            "on-surface-variant": "#3e4947",
+            outline: "#6e7977",
+            "outline-variant": "#bdc9c6",
+            error: "#ba1a1a",
+            "error-container": "#ffdad6"
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            "2xl": "1rem",
+            "3xl": "1.5rem",
+            full: "9999px"
+          },
+          spacing: {
+            base: "4px",
+            xs: "8px",
+            sm: "12px",
+            md: "16px",
+            lg: "24px",
+            xl: "32px"
+          },
+          fontFamily: {
+            "body": ["Plus Jakarta Sans"],
+            "headline": ["Plus Jakarta Sans"],
+            "serif": ["Source Serif 4"],
+            "label": ["Plus Jakarta Sans"]
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body { font-family: "Plus Jakarta Sans", sans-serif; }
+    .glass-panel { background: rgba(255, 255, 255, 0.72); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(15, 118, 110, 0.16); }
+    .material-symbols-outlined { font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24; }
+    .fill-icon { font-variation-settings: "FILL" 1; }
+  </style>
+</head>
+<body class="min-h-screen bg-background text-on-surface overflow-x-hidden">
+  <div class="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top_right,rgba(15,118,110,0.14),transparent_32%),radial-gradient(circle_at_bottom_left,rgba(33,105,99,0.12),transparent_28%)]"></div>
+
+  <main class="relative z-10 min-h-screen px-4 py-6 md:px-8 md:py-8">
+    <div class="mx-auto flex min-h-[calc(100vh-3rem)] max-w-[1440px] flex-col gap-6">
+      <header class="glass-panel flex items-center justify-between rounded-3xl px-4 py-3 shadow-sm md:px-6">
+        <div class="flex items-center gap-3">
+          <div class="flex h-11 w-11 items-center justify-center rounded-full bg-primary-container text-on-primary shadow-sm">
+            <span class="material-symbols-outlined fill-icon">neurology</span>
+          </div>
+          <div>
+            <h1 class="text-lg font-bold text-primary md:text-xl">StrokeGuard AI</h1>
+            <p class="text-sm text-on-surface-variant">Secure companion for stroke risk assessment</p>
+          </div>
+        </div>
+        <a class="hidden rounded-full border border-outline-variant/40 px-4 py-2 text-sm font-semibold text-primary transition-colors hover:bg-surface-container-low md:inline-flex" href="/admin">
+          Đăng nhập Quản trị
+        </a>
+      </header>
+
+      <div class="grid flex-1 items-stretch gap-6 xl:grid-cols-[1.05fr_minmax(460px,0.95fr)]">
+        <section class="glass-panel overflow-hidden rounded-[28px] p-6 shadow-sm md:p-8">
+          <div class="flex h-full flex-col justify-between gap-8">
+            <div class="space-y-6">
+              <div class="inline-flex items-center gap-2 rounded-full bg-surface-container-low px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
+                <span class="h-2 w-2 rounded-full bg-primary"></span>
+                Hồ sơ an toàn
+              </div>
+              <div class="max-w-2xl space-y-4">
+                <h2 class="text-3xl font-bold tracking-[-0.03em] text-on-background md:text-5xl">
+                  Quản lý đăng nhập cho User và Admin trong một lối vào rõ ràng.
+                </h2>
+                <p class="max-w-xl text-base leading-7 text-on-surface-variant md:text-lg md:leading-8">
+                  Đăng nhập, đăng ký, truy cập quản trị và kiểm tra tính an toàn của dữ liệu sức khỏe trong cùng một trải nghiệm gọn, rõ và đủ tin cậy.
+                </p>
+              </div>
+
+              <div class="grid gap-3 sm:grid-cols-3">
+                <div class="rounded-2xl bg-surface-container-lowest p-4 shadow-sm">
+                  <p class="text-sm font-semibold text-primary">Chat-based screening</p>
+                  <p class="mt-1 text-sm leading-6 text-on-surface-variant">Nhập triệu chứng, chỉ số sức khỏe và nhận phân tích theo ngữ cảnh.</p>
+                </div>
+                <div class="rounded-2xl bg-surface-container-lowest p-4 shadow-sm">
+                  <p class="text-sm font-semibold text-primary">Tiến độ theo dõi</p>
+                  <p class="mt-1 text-sm leading-6 text-on-surface-variant">Lưu lại xu hướng để nhìn rõ sự thay đổi của nguy cơ đột quỵ.</p>
+                </div>
+                <div class="rounded-2xl bg-surface-container-lowest p-4 shadow-sm">
+                  <p class="text-sm font-semibold text-primary">Tài liệu lâm sàng</p>
+                  <p class="mt-1 text-sm leading-6 text-on-surface-variant">Thông tin tham chiếu dành cho admin và tri thức y khoa nền tảng.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="rounded-2xl border border-outline-variant/30 bg-surface-container-lowest p-5">
+                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-on-surface-variant">Trust</p>
+                <p class="mt-2 text-sm leading-6 text-on-surface-variant">
+                  Dữ liệu y tế được hiển thị theo cách minh bạch và có thông báo rõ khi backend auth chưa sẵn sàng.
+                </p>
+              </div>
+              <div class="rounded-2xl border border-outline-variant/30 bg-surface-container-lowest p-5">
+                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-on-surface-variant">Admin path</p>
+                <p class="mt-2 text-sm leading-6 text-on-surface-variant">
+                  Lối vào quản trị được đặt riêng để không lẫn với luồng người dùng.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="glass-panel rounded-[28px] p-5 shadow-sm md:p-8">
+          <div class="mx-auto max-w-xl">
+            <div class="mb-6 flex items-center gap-2 overflow-x-auto rounded-full bg-surface-container-low p-1 text-sm">
+              <button class="auth-tab flex-1 rounded-full bg-primary px-4 py-2 font-semibold text-on-primary" data-mode="login" type="button">Đăng nhập</button>
+              <button class="auth-tab flex-1 rounded-full px-4 py-2 font-semibold text-on-surface-variant transition-colors hover:bg-surface-container-lowest" data-mode="signup" type="button">Đăng ký</button>
+            </div>
+
+            <form id="auth-form" class="space-y-5">
+              <div class="space-y-2">
+                <label class="text-sm font-semibold text-on-surface" for="full-name">Họ và tên</label>
+                <input id="full-name" name="full-name" class="w-full rounded-2xl border border-outline-variant/50 bg-surface-container-lowest px-4 py-3 text-sm outline-none transition focus:border-primary" placeholder="Nguyễn Văn A" type="text" />
+              </div>
+
+              <div class="space-y-2">
+                <label class="text-sm font-semibold text-on-surface" for="email">Email</label>
+                <input id="email" name="email" class="w-full rounded-2xl border border-outline-variant/50 bg-surface-container-lowest px-4 py-3 text-sm outline-none transition focus:border-primary" placeholder="you@example.com" type="email" />
+              </div>
+
+              <div class="space-y-2">
+                <label class="text-sm font-semibold text-on-surface" for="password">Mật khẩu</label>
+                <input id="password" name="password" class="w-full rounded-2xl border border-outline-variant/50 bg-surface-container-lowest px-4 py-3 text-sm outline-none transition focus:border-primary" placeholder="••••••••" type="password" />
+              </div>
+
+              <div id="confirm-wrap" class="space-y-2">
+                <label class="text-sm font-semibold text-on-surface" for="confirm-password">Xác nhận mật khẩu</label>
+                <input id="confirm-password" name="confirm-password" class="w-full rounded-2xl border border-outline-variant/50 bg-surface-container-lowest px-4 py-3 text-sm outline-none transition focus:border-primary" placeholder="••••••••" type="password" />
+              </div>
+
+              <div class="flex items-start gap-3 rounded-2xl bg-surface-container-low px-4 py-3">
+                <input id="remember" class="mt-1 h-4 w-4 rounded border-outline-variant text-primary focus:ring-primary" type="checkbox" />
+                <div>
+                  <label class="text-sm font-medium text-on-surface" for="remember" id="remember-label">Ghi nhớ tôi</label>
+                  <p class="mt-1 text-sm text-on-surface-variant">Dùng cho thiết bị cá nhân và demo local.</p>
+                </div>
+              </div>
+
+              <div id="consent-wrap" class="flex items-start gap-3 rounded-2xl bg-surface-container-low px-4 py-3">
+                <input id="consent" class="mt-1 h-4 w-4 rounded border-outline-variant text-primary focus:ring-primary" type="checkbox" />
+                <label class="text-sm text-on-surface" for="consent">Tôi đồng ý với việc lưu dữ liệu sức khỏe để phục vụ tầm soát.</label>
+              </div>
+
+              <div class="flex items-center justify-between gap-3">
+                <a class="text-sm font-semibold text-primary hover:underline" href="/forgot-password.html">Quên mật khẩu?</a>
+                <span id="mode-hint" class="text-sm text-on-surface-variant">Chế độ đăng nhập</span>
+              </div>
+
+              <button class="w-full rounded-2xl bg-primary-container px-5 py-3.5 text-sm font-bold text-on-primary shadow-sm transition hover:bg-primary" type="submit">
+                Đăng nhập
+              </button>
+
+              <button class="w-full rounded-2xl border border-outline-variant/50 bg-surface-container-lowest px-5 py-3.5 text-sm font-semibold text-on-surface transition hover:bg-surface-container-low" id="google-auth" type="button">
+                <span class="inline-flex items-center justify-center gap-2">
+                  <span class="material-symbols-outlined text-[18px]">account_circle</span>
+                  Đăng nhập với Google
+                </span>
+              </button>
+
+              <div id="auth-message" class="hidden rounded-2xl border border-outline-variant/30 bg-surface-container-low px-4 py-3 text-sm text-on-surface-variant"></div>
+
+              <a class="inline-flex w-full items-center justify-center rounded-2xl border border-dashed border-outline-variant/50 px-5 py-3.5 text-sm font-semibold text-primary transition hover:bg-surface-container-lowest" href="/admin">
+                Đăng nhập cho Quản trị viên
+              </a>
+
+              <p class="text-center text-sm text-on-surface-variant">
+                <span id="toggle-copy">Chưa có tài khoản?</span>
+                <button class="font-semibold text-primary hover:underline" id="toggle-mode" type="button">Đăng ký ngay</button>
+              </p>
+            </form>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const tabs = Array.from(document.querySelectorAll(".auth-tab"));
+    const form = document.querySelector("#auth-form");
+    const modeHint = document.querySelector("#mode-hint");
+    const toggleCopy = document.querySelector("#toggle-copy");
+    const toggleMode = document.querySelector("#toggle-mode");
+    const messageBox = document.querySelector("#auth-message");
+    const googleAuth = document.querySelector("#google-auth");
+    const confirmWrap = document.querySelector("#confirm-wrap");
+    const consentWrap = document.querySelector("#consent-wrap");
+    const submitButton = form.querySelector('button[type="submit"]');
+    const fullName = document.querySelector("#full-name");
+    const email = document.querySelector("#email");
+    const password = document.querySelector("#password");
+    const confirmPassword = document.querySelector("#confirm-password");
+    const consent = document.querySelector("#consent");
+    const authUserKey = "strokeguard_auth_user";
+    const query = new URLSearchParams(window.location.search);
+
+    let mode = "login";
+    const redirectToken = query.get("token");
+    const redirectError = query.get("error");
+
+    function setMessage(text, tone = "neutral") {
+      messageBox.textContent = text;
+      messageBox.className = `rounded-2xl border px-4 py-3 text-sm ${tone === "error" ? "border-error/30 bg-error-container/50 text-error" : "border-outline-variant/30 bg-surface-container-low text-on-surface-variant"}`;
+      messageBox.classList.remove("hidden");
+    }
+
+    function setMode(nextMode) {
+      mode = nextMode;
+      tabs.forEach((tab) => {
+        const active = tab.dataset.mode === nextMode;
+        tab.className = active
+          ? "auth-tab flex-1 rounded-full bg-primary px-4 py-2 font-semibold text-on-primary"
+          : "auth-tab flex-1 rounded-full px-4 py-2 font-semibold text-on-surface-variant transition-colors hover:bg-surface-container-lowest";
+      });
+
+      const isSignup = nextMode === "signup";
+      fullName.closest(".space-y-2").classList.toggle("hidden", !isSignup);
+      confirmWrap.classList.toggle("hidden", !isSignup);
+      consentWrap.classList.toggle("hidden", !isSignup);
+      modeHint.textContent = isSignup ? "Chế độ đăng ký" : "Chế độ đăng nhập";
+      toggleCopy.textContent = isSignup ? "Đã có tài khoản?" : "Chưa có tài khoản?";
+      toggleMode.textContent = isSignup ? "Đăng nhập ngay" : "Đăng ký ngay";
+      submitButton.textContent = isSignup ? "Tạo tài khoản" : "Đăng nhập";
+      document.querySelector("#remember-label").textContent = isSignup ? "Tôi đồng ý cập nhật thông tin hồ sơ" : "Ghi nhớ tôi";
+      googleAuth.innerHTML = isSignup
+        ? '<span class="inline-flex items-center justify-center gap-2"><span class="material-symbols-outlined text-[18px]">account_circle</span>Đăng ký với Google</span>'
+        : '<span class="inline-flex items-center justify-center gap-2"><span class="material-symbols-outlined text-[18px]">account_circle</span>Đăng nhập với Google</span>';
+    }
+
+    function persistAuth(data) {
+      localStorage.setItem(authUserKey, JSON.stringify({
+        email: data.email,
+        full_name: data.full_name,
+        is_admin: Boolean(data.is_admin)
+      }));
+    }
+
+    async function postJson(url, payload) {
+      const response = await fetch(url, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(data.detail || "Yêu cầu đăng nhập thất bại.");
+      }
+      return data;
+    }
+
+    if (redirectToken) {
+      window.history.replaceState({}, "", "/auth.html");
+      window.location.href = "/";
+    } else if (redirectError) {
+      setMessage(`Đăng nhập Google thất bại: ${redirectError}`, "error");
+    }
+
+    tabs.forEach((tab) => tab.addEventListener("click", () => setMode(tab.dataset.mode)));
+    toggleMode.addEventListener("click", () => setMode(mode === "login" ? "signup" : "login"));
+
+    googleAuth.addEventListener("click", async () => {
+      googleAuth.disabled = true;
+      try {
+        const response = await fetch(`/api/auth/oauth/google?mode=${encodeURIComponent(mode)}`, {
+          credentials: "include"
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          throw new Error(data.detail || "Google OAuth chưa sẵn sàng.");
+        }
+        if (!data.url) {
+          throw new Error("Backend không trả về Google URL.");
+        }
+        window.location.href = data.url;
+      } catch (error) {
+        setMessage(error.message || "Không thể khởi tạo Google sign-in.", "error");
+      } finally {
+        googleAuth.disabled = false;
+      }
+    });
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const data = {
+        mode,
+        name: fullName.value.trim(),
+        email: email.value.trim(),
+        remember: document.querySelector("#remember").checked
+      };
+
+      if (!data.email || !password.value.trim()) {
+        setMessage("Vui lòng nhập email và mật khẩu.", "error");
+        return;
+      }
+
+      if (mode === "signup") {
+        if (!data.name) {
+          setMessage("Vui lòng nhập họ và tên.", "error");
+          return;
+        }
+        if (password.value !== confirmPassword.value) {
+          setMessage("Mật khẩu xác nhận chưa khớp.", "error");
+          return;
+        }
+        if (!consent.checked) {
+          setMessage("Cần đồng ý lưu dữ liệu sức khỏe để tiếp tục.", "error");
+          return;
+        }
+      }
+
+      submitButton.disabled = true;
+      try {
+        const endpoint = mode === "signup" ? "/api/auth/register" : "/api/auth/login";
+        const payload = mode === "signup"
+          ? { email: data.email, password: password.value, full_name: data.name }
+          : { email: data.email, password: password.value };
+        const response = await postJson(endpoint, payload);
+        persistAuth(response);
+        window.location.href = "/";
+      } catch (error) {
+        setMessage(error.message || "Không thể xác thực tài khoản.", "error");
+      } finally {
+        submitButton.disabled = false;
+      }
+    });
+
+    async function bootstrap() {
+      setMode("login");
+      try {
+        const response = await fetch("/api/session/me", { credentials: "include" });
+        const data = await response.json().catch(() => ({}));
+        if (data?.authenticated) {
+          window.location.href = "/";
+        }
+      } catch {
+        // stay on the auth page
+      }
+    }
+
+    bootstrap();
+  </script>
+</body>
+</html>

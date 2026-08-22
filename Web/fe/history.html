@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>StrokeGuard AI - Lịch sử</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Source+Serif+4:wght@400;600&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            background: "#ebfdf8",
+            surface: "#ebfdf8",
+            "surface-container": "#dff2ed",
+            "surface-container-low": "#e5f8f2",
+            "surface-container-high": "#daece7",
+            "surface-container-highest": "#d4e6e1",
+            "surface-container-lowest": "#ffffff",
+            primary: "#005c55",
+            "primary-container": "#0f766e",
+            secondary: "#216963",
+            "secondary-container": "#a8ece5",
+            "on-primary": "#ffffff",
+            "on-surface": "#0e1e1b",
+            "on-background": "#0e1e1b",
+            "on-surface-variant": "#3e4947",
+            "on-secondary-container": "#266d68",
+            outline: "#6e7977",
+            "outline-variant": "#bdc9c6",
+            error: "#ba1a1a",
+            "error-container": "#ffdad6"
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body { font-family: "Plus Jakarta Sans", sans-serif; }
+    .glass-panel { background: rgba(255, 255, 255, 0.72); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(15, 118, 110, 0.16); }
+    .material-symbols-outlined { font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24; }
+    .fill-icon { font-variation-settings: "FILL" 1; }
+    @keyframes rise-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .history-item { animation: rise-in 220ms ease-out both; }
+  </style>
+</head>
+<body class="min-h-screen overflow-x-hidden bg-background text-on-surface">
+  <div class="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_top_left,rgba(15,118,110,0.16),transparent_26%),radial-gradient(circle_at_bottom_right,rgba(33,105,99,0.12),transparent_24%)]"></div>
+
+  <header class="fixed inset-x-0 top-0 z-50 border-b border-outline-variant/30 bg-surface/80 backdrop-blur-xl shadow-sm">
+    <div class="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-4 sm:px-6">
+      <div class="flex items-center gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary-container text-on-primary shadow-sm">
+          <span class="material-symbols-outlined fill-icon">neurology</span>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold text-primary">StrokeGuard AI</h1>
+          <p class="text-xs text-on-surface-variant">Lịch sử phiên chat</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <a class="rounded-full border border-outline-variant/40 px-4 py-2 text-sm font-semibold text-primary transition hover:bg-surface-container-low" href="/">Về chat</a>
+        <a class="rounded-full border border-outline-variant/40 px-4 py-2 text-sm font-semibold text-primary transition hover:bg-surface-container-low" href="/progress">Tiến độ</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="relative z-10 mx-auto max-w-[1120px] px-4 pb-16 pt-24 sm:px-6">
+    <section class="glass-panel rounded-[30px] p-4 shadow-sm sm:p-6">
+      <div class="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-[0.2em] text-on-surface-variant">Lịch sử phiên</p>
+          <h2 class="mt-1 text-[28px] font-bold tracking-[-0.03em] text-on-background">Timeline chat gần nhất</h2>
+          <p id="summary-note" class="mt-2 max-w-2xl text-sm leading-6 text-on-surface-variant">Đang tải dữ liệu phiên hiện tại.</p>
+        </div>
+        <span id="history-count" class="rounded-full bg-secondary-container px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-on-secondary-container">0</span>
+      </div>
+
+      <div id="history-list" class="relative mt-5 space-y-4"></div>
+    </section>
+  </main>
+
+  <script>
+    const sessionKey = "strokeguard_session_id";
+    const summaryNote = document.querySelector("#summary-note");
+    const historyList = document.querySelector("#history-list");
+    const historyCount = document.querySelector("#history-count");
+
+    function getSessionId() {
+      let sessionId = localStorage.getItem(sessionKey);
+      if (!sessionId) {
+        sessionId = crypto.randomUUID();
+        localStorage.setItem(sessionKey, sessionId);
+      }
+      return sessionId;
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+
+    function renderHistory(messages) {
+      historyCount.textContent = String(messages.length);
+      if (!messages.length) {
+        summaryNote.textContent = "Chưa có lịch sử cho phiên này.";
+        historyList.innerHTML = `
+          <div class="rounded-2xl border border-dashed border-outline-variant/40 bg-surface-container-lowest p-4 text-sm text-on-surface-variant">
+            Hãy quay lại chat và nhập dữ liệu sức khỏe để bắt đầu ghi nhận lịch sử.
+          </div>
+        `;
+        return;
+      }
+
+      summaryNote.textContent = `Phiên hiện tại có ${messages.length} tin nhắn.`;
+      historyList.innerHTML = `
+        <div class="absolute left-4 top-0 bottom-0 w-px bg-outline-variant/30"></div>
+      ` + messages.slice(-20).map((message, index) => {
+        const isUser = message.role === "user";
+        const timeLabel = message.time || "Vừa xong";
+        return `
+          <div class="relative pl-10 history-item" style="animation-delay: ${Math.min(index, 8) * 35}ms;">
+            <div class="absolute left-[10px] top-5 flex h-4 w-4 items-center justify-center rounded-full border-4 ${isUser ? "border-primary-container bg-primary" : "border-surface-container-lowest bg-primary-container"} shadow-sm">
+              <span class="sr-only">${isUser ? "User" : "AI"}</span>
+            </div>
+            <div class="rounded-[24px] ${isUser ? "bg-primary-container text-on-primary" : "bg-surface-container-lowest text-on-surface"} p-4 shadow-sm">
+              <div class="flex items-center justify-between gap-3">
+                <p class="text-xs font-bold uppercase tracking-[0.2em] ${isUser ? "text-on-primary/80" : "text-primary"}">${isUser ? "Người dùng" : "StrokeGuard AI"}</p>
+                <span class="rounded-full ${isUser ? "bg-on-primary/10 text-on-primary/80" : "bg-surface-container-low text-on-surface-variant"} px-2 py-1 text-[11px] font-semibold">${escapeHtml(timeLabel)}</span>
+              </div>
+              <p class="mt-2 text-sm leading-6 ${isUser ? "text-on-primary" : "text-on-surface-variant"}">${escapeHtml(message.content)}</p>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    async function init() {
+      const response = await fetch(`/api/sessions/${encodeURIComponent(getSessionId())}/history-summary`, {
+        credentials: "include"
+      });
+      if (!response.ok) {
+        renderHistory([]);
+        return;
+      }
+      const body = await response.json();
+      renderHistory(body?.recent_messages || []);
+    }
+
+    init();
+  </script>
+</body>
+</html>
